@@ -2,6 +2,14 @@
 
 import sys
 
+def beautify_fasta(sequence, per_line = 60) :
+    '''Limit the number of characters per line for a sequence'''
+    i = 0
+    while i < len(sequence) :
+        sequence = sequence[:i] + '\n' + sequence[i:]
+        i += per_line + 1
+    return sequence
+
 def get_species(header) :
     '''Get the species of a sequence'''
     # NCBI
