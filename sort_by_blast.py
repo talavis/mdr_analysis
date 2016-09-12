@@ -10,14 +10,25 @@ def read_blast(filename) :
         raw = infile.read()
         data = tuple(line.split('\t') for line in raw.split('\n') if len(line) > 0)
     return data
-        
+
+def match_blast_to_fasta(identifier, headers) :
+    '''Get the full header for the identifier from the BLAST file'''
+    try :
+        match = [header for header in headers if identifier in header][0]
+    except IndexError :
+        return False
+    return headers.index(match)
+
 def main() :
     if len(sys.argv) != 3 :
         sys.stderr.write('Usage: {} <BLAST tabular output> <FASTA file>\n'.format(sys.argv[0]))
         sys.exit(1)
 
     blast_data = read_blast(sys.argv[1])
-    seqs, headers = bioinfo.read_fasta(sys.argv[2])
+    headers, seqs = bioinfo.read_fasta(sys.argv[2])
+    
+    for i in range(len(blast_data)) :
+        
 
 if __name__ == '__main__' :
     main()
