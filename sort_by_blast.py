@@ -12,7 +12,7 @@ def read_blast(filename) :
     return data
 
 def match_blast_to_fasta(identifier, headers) :
-    '''Get the full header for the identifier from the BLAST file'''
+    '''Get the index for the full header for the identifier from the BLAST file'''
     try :
         match = [header for header in headers if identifier in header][0]
     except IndexError :
@@ -28,7 +28,8 @@ def main() :
     headers, seqs = bioinfo.read_fasta(sys.argv[2])
     
     for i in range(len(blast_data)) :
-        
+        ind = match_blast_to_fasta(blast_data[i][1], headers)
+        print('>{}\n{}'.format(headers[ind], seqs[ind]))
 
 if __name__ == '__main__' :
     main()
