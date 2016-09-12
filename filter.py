@@ -12,6 +12,15 @@ def filter_length(headers, sequences, reflen, lmin = 0.9, lmax = 1.1) :
         i += 1
     return headers, sequences
 
+def get_species(header) :
+    '''Get the species of a sequence'''
+    # NCBI
+    if header[:2] == 'gi' :
+        return header[header.index('[')+1:header.index(']')]
+    # UniProt
+    if header[:2] in ['sp', 'tr'] :
+        return header[header.index('OS=')+3:header.index('=', header.index('OS=')+3)-2]
+
 def read_fasta(filename) :
     '''Read a FASTA file and return the headers and sequences as lists'''
     with open(filename) as infile :
@@ -47,6 +56,8 @@ def main() :
 
     REFLEN = len(seqs[headers.index(refseq_matches[0])])
     headers, seqs = filter_length(headers, seqs, REFLEN)
+
+    
     
 if __name__ == '__main__' :
     main()
