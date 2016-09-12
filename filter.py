@@ -5,20 +5,20 @@ import sys
 import bioinfo
 
 def filter_length(headers, sequences, reflen, lmin = 0.9, lmax = 1.1) :
-    '''Remove all sequences that are outside the limits'''
+    '''In-place removal of all sequences that are outside the limits'''
     i = 0
     while i < len(sequences) :
         if reflen / len(sequences[i]) < lmin or reflen / len(sequences[i]) > lmax :
             headers.pop(i)
             sequences.pop(i)
         i += 1
-    return headers, sequences
 
 
 def test_filter_length() :
     headers = ['header1', 'header2', 'header3', 'header4']
     sequences = ['ACDEFGHIKLMNPQRSTVWY', 'ACDEFGHIKLMNPQRSTVW', 'FGHIKLMNPQRSTVWY', 'AAAAAGIKLMNPQRSTVWY']
-    assert filter_length(list(headers), list(sequences), len(sequences[0])) == (headers[:2] + headers[3:], sequences[:2] + sequences[3:])
+    answer = (headers[:2] + headers[3:], sequences[:2] + sequences[3:])
+    filter_length(headers, sequences, len(sequences[0])) == answer
 
 def main() :
     if len(sys.argv) != 3 :
@@ -40,7 +40,7 @@ def main() :
         sys.exit(1)
 
     REFLEN = len(seqs[headers.index(refseq_matches[0])])
-    headers, seqs = filter_length(headers, seqs, REFLEN)
+    filter_length(headers, seqs, REFLEN)
 
     
     
