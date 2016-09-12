@@ -8,6 +8,7 @@ install:
 script:
   - py.test -vv bioinfo.py --cov bioinfo
   - py.test -vv sort_by_blast.py --cov sort_by_blast
+  - py.test -vv filter.py --cov filter
   - coveralls
 notifications:
   email:

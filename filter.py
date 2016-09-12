@@ -14,6 +14,12 @@ def filter_length(headers, sequences, reflen, lmin = 0.9, lmax = 1.1) :
         i += 1
     return headers, sequences
 
+
+def test_filter_length() :
+    headers = ['header1', 'header2', 'header3', 'header4']
+    sequences = ['ACDEFGHIKLMNPQRSTVWY', 'ACDEFGHIKLMNPQRSTVW', 'FGHIKLMNPQRSTVWY', 'AAAAAGIKLMNPQRSTVWY']
+    assert filter_length(list(headers), list(sequences), len(sequences[0])) == (headers[:2] + headers[3:], sequences[:2] + sequences[3:])
+
 def main() :
     if len(sys.argv) != 3 :
         sys.stderr.write('Usage: {} <seqfile> <refseq>\n'.format(sys.argv[0]))
