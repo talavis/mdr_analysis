@@ -29,7 +29,7 @@ def main() :
     
     for i in range(len(blast_data)) :
         ind = match_blast_to_fasta(blast_data[i][1], headers)
-        print('>{}\n{}'.format(headers[ind], seqs[ind]))
+        print('>{}\n{}'.format(headers[ind], bioinfo.beautify_fasta(seqs[ind])))
 
 if __name__ == '__main__' :
     main()
