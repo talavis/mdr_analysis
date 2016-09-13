@@ -3,11 +3,13 @@ language:
 python:
   - 3.5
 install:
-  - pip install pytest
+  - pip install pytest-cov
+  - pip install python-coveralls
 script:
-  - py.test -vv bioinfo.py
-  - py.test -vv sort_by_blast.py
-  - py.test -vv filter.py
+  - py.test -vv bioinfo.py --cov bioinfo
+  - py.test -vv sort_by_blast.py --cov sort_by_blast
+  - py.test -vv filter.py --cov filter
+  - coveralls
 notifications:
   email:
     on_success: never
