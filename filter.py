@@ -11,15 +11,38 @@ def filter_length(headers, sequences, reflen, lmin = 0.9, lmax = 1.1) :
         if reflen / len(sequences[i]) < lmin or reflen / len(sequences[i]) > lmax :
             headers.pop(i)
             sequences.pop(i)
-        i += 1
+        else :
+            i += 1
 
 
 def test_filter_length() :
     headers = ['header1', 'header2', 'header3', 'header4']
-    sequences = ['ACDEFGHIKLMNPQRSTVWY', 'ACDEFGHIKLMNPQRSTVW', 'FGHIKLMNPQRSTVWY', 'AAAAAGIKLMNPQRSTVWY']
-    answer = (headers[:2] + headers[3:], sequences[:2] + sequences[3:])
-    filter_length(headers, sequences, len(sequences[0])) == answer
+    sequences = ['ACDEFGHIKLMNPQRSTVWY', 'ACDEFGHIKLMNPQRSTVW', 'FGHIKLMNPQRSTVWY', 'AAAAAGIRSTVWY']
+    answer = (headers[:2], sequences[:2])
+    filter_length(headers, sequences, len(sequences[0]))
+    assert (headers, sequences) == answer
 
+def filter_species(headers, sequences) :
+    '''In-place removal of any extra sequences from a species. Assumes first hit is best hit.'''
+    species = list()
+    i = 0
+    while i < len(sequences) :
+        spec = bioinfo.get_species(headers[i])
+        if spec in species :
+            headers.pop(i)
+            sequences.pop(i)
+        else :
+            species.append(spec)
+            i += 1
+
+def test_filter_species() :
+    headers = ['gi|header1 [Homo sapiens]', 'gi|header2 [Homo sapiens]',
+               'sp|header3 OS=Rattus norvegicus GN=Unknown', 'gi|header4 [Rattus norvegicus]']
+    sequences = ['ACDEFGHIKLMNPQRSTVWY', 'ACDEFGHIKLMNPQRSTVW', 'FGHIKLMNPQRSTVWY', 'AAAAAGIKLMNPQRSTVWY']
+    answer = ([headers[0], headers[2]], [sequences[0], sequences[2]])
+    filter_species(headers, sequences)
+    assert (headers, sequences) == answer
+    
 def main() :
     if len(sys.argv) != 3 :
         sys.stderr.write('Usage: {} <seqfile> <refseq>\n'.format(sys.argv[0]))
@@ -40,9 +63,7 @@ def main() :
         sys.exit(1)
 
     REFLEN = len(seqs[headers.index(refseq_matches[0])])
-    filter_length(headers, seqs, REFLEN)
-
-    
+    filter_length(headers, seqs, REFLEN)    
     
 if __name__ == '__main__' :
     main()
