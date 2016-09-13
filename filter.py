@@ -14,7 +14,6 @@ def filter_length(headers, sequences, reflen, lmin = 0.9, lmax = 1.1) :
         else :
             i += 1
 
-
 def test_filter_length() :
     headers = ['header1', 'header2', 'header3', 'header4']
     sequences = ['ACDEFGHIKLMNPQRSTVWY', 'ACDEFGHIKLMNPQRSTVW', 'FGHIKLMNPQRSTVWY', 'AAAAAGIRSTVWY']
@@ -63,7 +62,12 @@ def main() :
         sys.exit(1)
 
     REFLEN = len(seqs[headers.index(refseq_matches[0])])
-    filter_length(headers, seqs, REFLEN)    
+    filter_length(headers, seqs, REFLEN)
+    filter_species(headers, seqs)
+
+    for i in range(len(headers)) :
+        print('>{}'.format(headers[i]))
+        print(bioinfo.beautify_fasta(seqs[i]))
     
 if __name__ == '__main__' :
     main()
