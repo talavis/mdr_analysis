@@ -6,11 +6,10 @@ install:
   - pip install pytest-cov
   - pip install python-coveralls
 script:
-  py.test -vv bioinfo.py filter.py sort_by_blast.py --cov bioinfo filter sort_by_blast
+  py.test -vv bioinfo.py filter.py sort_by_blast.py --cov=bioinfo --cov=filter --cov=sort_by_blast
 notifications:
   email:
     on_success: never
     on_failure: never
-
 after_success:
   coveralls
