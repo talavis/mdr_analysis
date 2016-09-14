@@ -6,18 +6,29 @@ import sys
 from Bio import AlignIO
 from Bio.Align import AlignInfo
 
-def make_freq_table(alignment) :
-    '''Make a pssm of an alignment'''
-    summary1 = AlignInfo.SummaryInfo(alignment)
-    consensus = summary1.dumb_consensus()
-    freq_table = summary1.pos_specific_score_matrix(consensus)
+def helper_test_getalign() : 
+    import tempfile
 
-    return freq_table
+    indata = '''>gi|0000000|ref|NP_000000.1| Made-up data [Rattus norvegicus]
+ACDEFGHIKL
+>gi|0000001|ref|NP_000001.1| Made-up data [Arabidopsis thaliana]
+ACDEAGHIKL
+>gi|0000002|ref|NP_000002.1| Made-up data [Homo Sapiens]
+ACDEFGHIKL
+>gi|0000003|ref|NP_000003.1| Made-up data [Arabidopsis thaliana]
+ADDEEGHILL'''
+    
+    filename = tempfile.mkstemp()[1]
+    with open(filename, 'w') as f :
+        f.write(indata)
 
-def calculate_conservation(freq_table, align_len) :
-    '''Determine the most conserved residue and its conservation rate in each position'''
+    return AlignIO.read(filename, 'fasta' )
+
+def get_most_conserved(freq_table, align_len) :
+    '''Determine the most conserved residue and its conservation rate in each position
+    Input should be a PSSM object or a list of dicts (PSSM.pssm, but without [0] in each tuple)'''
     result = list()
-    for p in range(len(freq_table.pssm)) :
+    for p in range(len(freq_table)) :
         freq_table_inv = dict((j, i) for i, j in freq_table[p].items())
         best_conserved = freq_table_inv[max(freq_table_inv)]
         score = freq_table[p][best_conserved]/align_len
@@ -25,9 +36,45 @@ def calculate_conservation(freq_table, align_len) :
 
     return result
 
-def test_make_pssm() :
-    pass
+def test_get_most_conserved() :
+    freq_table = [{'K': 0, 'H': 0, 'I': 0, 'L': 0, 'A': 4.0, 'C': 0, 'F': 0, 'D': 0, 'G': 0, 'E': 0},
+                  {'K': 0, 'H': 0, 'I': 0, 'L': 0, 'A': 0, 'C': 3.0, 'F': 0, 'D': 1.0, 'G': 0, 'E': 0},
+                  {'K': 0, 'H': 0, 'I': 0, 'L': 0, 'A': 0, 'C': 0, 'F': 0, 'D': 4.0, 'G': 0, 'E': 0},
+                  {'K': 0, 'H': 0, 'I': 0, 'L': 0, 'A': 0, 'C': 0, 'F': 0, 'D': 0, 'G': 0, 'E': 4.0},
+                  {'K': 0, 'H': 0, 'I': 0, 'L': 0, 'A': 1.0, 'C': 0, 'F': 2.0, 'D': 0, 'G': 0, 'E': 1.0},
+                  {'K': 0, 'H': 0, 'I': 0, 'L': 0, 'A': 0, 'C': 0, 'F': 0, 'D': 0, 'G': 4.0, 'E': 0},
+                  {'K': 0, 'H': 4.0, 'I': 0, 'L': 0, 'A': 0, 'C': 0, 'F': 0, 'D': 0, 'G': 0, 'E': 0},
+                  {'K': 0, 'H': 0, 'I': 4.0, 'L': 0, 'A': 0, 'C': 0, 'F': 0, 'D': 0, 'G': 0, 'E': 0},
+                  {'K': 3.0, 'H': 0, 'I': 0, 'L': 1.0, 'A': 0, 'C': 0, 'F': 0, 'D': 0, 'G': 0, 'E': 0},
+                  {'K': 0, 'H': 0, 'I': 0, 'L': 4.0, 'A': 0, 'C': 0, 'F': 0, 'D': 0, 'G': 0, 'E': 0}]
+    
+    REAL = [(1.0, 'A'), (0.75, 'C'), (1.0, 'D'), (1.0, 'E'), (0.5, 'F'), (1.0, 'G'), (1.0, 'H'), (1.0, 'I'), (0.75, 'K'), (1.0, 'L')]
+    
+    assert get_most_conserved(freq_table, 4) == REAL
 
+def make_freq_table(alignment) :
+    '''Make a pssm of an alignment'''
+    summary = AlignInfo.SummaryInfo(alignment)
+    consensus = summary.dumb_consensus()
+    freq_table = summary.pos_specific_score_matrix(consensus)
+
+    return freq_table
+
+def test_make_freq_table() :
+    REAL = [('A', {'K': 0, 'H': 0, 'I': 0, 'L': 0, 'A': 4.0, 'C': 0, 'F': 0, 'D': 0, 'G': 0, 'E': 0}),
+            ('C', {'K': 0, 'H': 0, 'I': 0, 'L': 0, 'A': 0, 'C': 3.0, 'F': 0, 'D': 1.0, 'G': 0, 'E': 0}),
+            ('D', {'K': 0, 'H': 0, 'I': 0, 'L': 0, 'A': 0, 'C': 0, 'F': 0, 'D': 4.0, 'G': 0, 'E': 0}),
+            ('E', {'K': 0, 'H': 0, 'I': 0, 'L': 0, 'A': 0, 'C': 0, 'F': 0, 'D': 0, 'G': 0, 'E': 4.0}),
+            ('X', {'K': 0, 'H': 0, 'I': 0, 'L': 0, 'A': 1.0, 'C': 0, 'F': 2.0, 'D': 0, 'G': 0, 'E': 1.0}),
+            ('G', {'K': 0, 'H': 0, 'I': 0, 'L': 0, 'A': 0, 'C': 0, 'F': 0, 'D': 0, 'G': 4.0, 'E': 0}),
+            ('H', {'K': 0, 'H': 4.0, 'I': 0, 'L': 0, 'A': 0, 'C': 0, 'F': 0, 'D': 0, 'G': 0, 'E': 0}),
+            ('I', {'K': 0, 'H': 0, 'I': 4.0, 'L': 0, 'A': 0, 'C': 0, 'F': 0, 'D': 0, 'G': 0, 'E': 0}),
+            ('K', {'K': 3.0, 'H': 0, 'I': 0, 'L': 1.0, 'A': 0, 'C': 0, 'F': 0, 'D': 0, 'G': 0, 'E': 0}),
+            ('L', {'K': 0, 'H': 0, 'I': 0, 'L': 4.0, 'A': 0, 'C': 0, 'F': 0, 'D': 0, 'G': 0, 'E': 0})]
+    alignment = helper_test_getalign()
+    
+    assert make_freq_table(alignment).pssm == REAL
+    
 def main() :
     if len(sys.argv) != 3 :
         sys.stderr.write('Usage: {0} <Alignment> <reference sequence>\n'.format(sys.argv[0]))
@@ -37,7 +84,8 @@ def main() :
 
     # load alignments
     filename = sys.argv[1]
-    alignment = AlignIO.read(filename, 'fasta')
+
+    alignment = read_fasta_bp(filename)
 
     headers = [s.name for s in alignment]
     REFIND = headers.index([h for h in headers if REFSEQ in h][0])
