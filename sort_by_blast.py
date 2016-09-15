@@ -40,7 +40,8 @@ def match_blast_to_fasta(identifier, headers) :
     return headers.index(match[0])
 
 def test_match_blast_to_fasta() :
-    headers = ('gi|8393848|ref|NP_058905.1| trans-2-enoyl-CoA reductase, mitochondrial precursor [Rattus norvegicus]', 'gi|18408069|ref|NP_566881.1| putative trans-2-enoyl-CoA reductase [Arabidopsis thaliana]')
+    headers = ('gi|8393848|ref|NP_058905.1| trans-2-enoyl-CoA reductase, mitochondrial precursor [Rattus norvegicus]',
+               'gi|18408069|ref|NP_566881.1| putative trans-2-enoyl-CoA reductase [Arabidopsis thaliana]')
     assert match_blast_to_fasta('gi|18408069', headers) == 1
 
 def main() :
