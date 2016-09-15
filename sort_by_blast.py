@@ -30,31 +30,34 @@ sp|Q9BV79|MECR_HUMAN	gi|397515849|ref|XP_003828155.1|	99.196	373	3	0	1	373	1	373
 def match_blast_to_fasta(identifier, headers) :
     '''Get the index for the full header for the identifier from the BLAST file.
        Returns False if not found'''
+    match = [header for header in headers if identifier in header]
+    if len(match) > 1 :
+        sys.stderr.write('I: identifier ({}) found in multiple headers; returning the first\n'.format(identifier))
     try :
-        match = [header for header in headers if identifier in header]
+        return headers.index(match[0])
     except IndexError :
         sys.stderr.write('I: identifier ({}) not found in any header\n'.format(identifier))
         return False
-    if len(match) > 1 :
-        sys.stderr.write('I: identifier ({}) found in multiple headers; returning the first\n'.format(identifier))
-    return headers.index(match[0])
+
+    
 
 def test_match_blast_to_fasta() :
     headers = ('gi|8393848|ref|NP_058905.1| trans-2-enoyl-CoA reductase, mitochondrial precursor [Rattus norvegicus]',
                'gi|18408069|ref|NP_566881.1| putative trans-2-enoyl-CoA reductase [Arabidopsis thaliana]')
     assert match_blast_to_fasta('gi|18408069', headers) == 1
 
-def main() :
+def main(blast_file, filename) :
+    blast_data = read_blast(blast_file)
+    headers, seqs = bioinfo.read_fasta(filename)
+    
+    for i in range(len(blast_data)) :
+        ind = match_blast_to_fasta(blast_data[i][1], headers)
+        if ind != False :
+            print('>{}\n{}'.format(headers[ind], bioinfo.beautify_fasta(seqs[ind])))
+
+if __name__ == '__main__' :
     if len(sys.argv) != 3 :
         sys.stderr.write('Usage: {} <BLAST tabular output> <FASTA file>\n'.format(sys.argv[0]))
         sys.exit(1)
 
-    blast_data = read_blast(sys.argv[1])
-    headers, seqs = bioinfo.read_fasta(sys.argv[2])
-    
-    for i in range(len(blast_data)) :
-        ind = match_blast_to_fasta(blast_data[i][1], headers)
-        print('>{}\n{}'.format(headers[ind], bioinfo.beautify_fasta(seqs[ind])))
-
-if __name__ == '__main__' :
-    main()
+    main(sys.argv[1], sys.argv[2])
