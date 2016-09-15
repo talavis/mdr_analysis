@@ -42,13 +42,8 @@ def test_filter_species() :
     filter_species(headers, sequences)
     assert (headers, sequences) == answer
     
-def main() :
-    if len(sys.argv) != 3 :
-        sys.stderr.write('Usage: {} <seqfile> <refseq>\n'.format(sys.argv[0]))
-        sys.exit(1)
-
-    REFSEQ = sys.argv[2]
-    headers, seqs = bioinfo.read_fasta(sys.argv[1])
+def main(filename, REFSEQ) :
+    headers, seqs = bioinfo.read_fasta(filename)
 
     # confirm that there is _one_ matching sequence
     refseq_matches = [s for s in headers if REFSEQ in s]
@@ -68,6 +63,10 @@ def main() :
     for i in range(len(headers)) :
         print('>{}'.format(headers[i]))
         print(bioinfo.beautify_fasta(seqs[i]))
-    
+        
 if __name__ == '__main__' :
-    main()
+    if len(sys.argv) != 3 :
+        sys.stderr.write('Usage: {} <seqfile> <refseq>\n'.format(sys.argv[0]))
+        sys.exit(1)
+
+    main(sys.argv[1], sys.argv[2])
