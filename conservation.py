@@ -22,7 +22,7 @@ ADDEEGHILL'''
     with open(filename, 'w') as f :
         f.write(indata)
 
-    return AlignIO.read(filename, 'fasta' )
+    return filename
 
 def get_most_conserved(freq_table, align_len) :
     '''Determine the most conserved residue and its conservation rate in each position
@@ -77,17 +77,14 @@ def test_make_freq_table() :
             ('I', {'K': 0, 'H': 0, 'I': 4.0, 'L': 0, 'A': 0, 'C': 0, 'F': 0, 'D': 0, 'G': 0, 'E': 0}),
             ('K', {'K': 3.0, 'H': 0, 'I': 0, 'L': 1.0, 'A': 0, 'C': 0, 'F': 0, 'D': 0, 'G': 0, 'E': 0}),
             ('L', {'K': 0, 'H': 0, 'I': 0, 'L': 4.0, 'A': 0, 'C': 0, 'F': 0, 'D': 0, 'G': 0, 'E': 0})]
-    alignment = helper_test_getalign()
+    
+    alignment = AlignIO.read(helper_test_getalign(), 'fasta')
     
     assert make_freq_table(alignment).pssm == REAL
     
 def main(filename, REFSEQ) :
-    if len(sys.argv) != 3 :
-        sys.stderr.write('Usage: {0} <alignment file> <reference sequence>\n'.format(sys.argv[0]))
-        sys.exit(1)
-
     # load alignments
-    alignment = AlignIO.read(filename, 'fasta' )
+    alignment = AlignIO.read(filename, 'fasta')
     
     headers = [s.name for s in alignment]
     try :
@@ -102,6 +99,18 @@ def main(filename, REFSEQ) :
 
     for i in range(len(freq_table.pssm)) :
         print(cons[i])
-        
+
+def test_main(capsys) :
+    REAL = '''(1.0, 'A')\n(0.75, 'C')\n(1.0, 'D')\n(1.0, 'E')\n(0.5, 'F')\n(1.0, 'G')\n(1.0, 'H')\n(1.0, 'I')\n(0.75, 'K')\n(1.0, 'L')\n'''
+
+    main(helper_test_getalign(), 'NP_000001.1')
+    out, err = capsys.readouterr()
+
+    assert out == REAL
+    
 if __name__ == '__main__' :
+    if len(sys.argv) != 3 :
+        sys.stderr.write('Usage: {0} <alignment file> <reference sequence>\n'.format(sys.argv[0]))
+        sys.exit(1)
+
     main(sys.argv[1], sys.argv[2])
