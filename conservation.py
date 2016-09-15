@@ -81,19 +81,20 @@ def test_make_freq_table() :
     
     assert make_freq_table(alignment).pssm == REAL
     
-def main() :
+def main(filename, REFSEQ) :
     if len(sys.argv) != 3 :
-        sys.stderr.write('Usage: {0} <alignment> <reference sequence>\n'.format(sys.argv[0]))
+        sys.stderr.write('Usage: {0} <alignment file> <reference sequence>\n'.format(sys.argv[0]))
         sys.exit(1)
 
-    REFSEQ = sys.argv[2]
-
     # load alignments
-    filename = sys.argv[1]
     alignment = AlignIO.read(filename, 'fasta' )
-
+    
     headers = [s.name for s in alignment]
-    REFIND = headers.index([h for h in headers if REFSEQ in h][0])
+    try :
+        REFIND = headers.index([h for h in headers if REFSEQ in h][0])
+    except IndexError :
+        sys.stderr.write('E: The reference sequence ({}) is not found among the sequences\n'.format(REFSEQ))
+        sys.exit(1)
     SEQLEN = len(str(alignment[REFIND].seq).replace('-', ''))
 
     freq_table = make_freq_table(alignment)
@@ -101,6 +102,6 @@ def main() :
 
     for i in range(len(freq_table.pssm)) :
         print(cons[i])
-
+        
 if __name__ == '__main__' :
-    main()
+    main(sys.argv[1], sys.argv[2])
