@@ -45,6 +45,7 @@ def test_match_blast_to_fasta() :
     headers = ('gi|8393848|ref|NP_058905.1| trans-2-enoyl-CoA reductase, mitochondrial precursor [Rattus norvegicus]',
                'gi|18408069|ref|NP_566881.1| putative trans-2-enoyl-CoA reductase [Arabidopsis thaliana]')
     assert match_blast_to_fasta('gi|18408069', headers) == 1
+    assert match_blast_to_fasta('incorrect', headers) == False
 
 def main(blast_file, filename) :
     blast_data = read_blast(blast_file)
