@@ -63,6 +63,27 @@ def main(filename, REFSEQ) :
     for i in range(len(headers)) :
         print('>{}'.format(headers[i]))
         print(bioinfo.beautify_fasta(seqs[i]))
+
+def test_main(capsys) :
+    import tempfile
+
+    indata = '''>gi|0000000|ref|NP_000000.1| Made-up data [Rattus norvegicus]
+ACDEFGHIKL
+>gi|0000001|ref|NP_000001.1| Made-up data [Arabidopsis thaliana]
+ACDEAGHIKL
+>gi|0000002|ref|NP_000002.1| Made-up data [Homo Sapiens]
+ACD
+>gi|0000003|ref|NP_000003.1| Made-up data [Arabidopsis thaliana]
+ACDEFGHIKL'''
+    
+    filename = tempfile.mkstemp()[1]
+    with open(filename, 'w') as f :
+        f.write(indata)
+
+    REAL = '''>gi|0000000|ref|NP_000000.1| Made-up data [Rattus norvegicus]\nACDEFGHIKL\n>gi|0000001|ref|NP_000001.1| Made-up data [Arabidopsis thaliana]\nACDEAGHIKL\n'''
+    main(filename, 'NP_000001.1')
+    out, err = capsys.readouterr()
+    assert out == REAL
         
 if __name__ == '__main__' :
     if len(sys.argv) != 3 :
