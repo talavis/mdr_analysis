@@ -1,6 +1,32 @@
 #!/bin/bash
 
-SCRIPTDIR=.
-${SCRIPTDIR}/sort_by_blast.py $1 $2 > ${1}_sorted
-${SCRIPTDIR}/filter.py ${1}_sorted $3 > ${1}_filtered
-mafft-linsi --thread `nproc` ${1}_filtered > ${1}_filtered.mali
+if [[ $# -ne 2 ]] ; then
+    echo Usage: $0 sequencefile blastdbname
+    exit 1
+fi
+
+# 1: input for BLAST
+# 2: database location
+BLASTIN=$1
+DB=$2
+
+PROJ=${BLASTIN%.*}
+PROJ=${PROJ##*/}
+QUERY=${BLASTIN##*/}
+QUERYNAME=`head -1 ${BLASTIN} | cut -d '|' -f 2`
+RUNDIR=run-${PROJ}-`date +%y%m%d-%H:%M`
+
+SCRIPTDIR=`pwd`
+
+mkdir ${RUNDIR}
+cp ${BLASTIN} ${RUNDIR}
+cd ${RUNDIR}
+
+blastp -query ${QUERY} -db ${DB} -outfmt 6 -out ${PROJ}_blastp -num_threads `nproc`
+cut -f 2 ${PROJ}_blastp > ${PROJ}_accs
+blastdbcmd -entry_batch ${PROJ}_accs -db ${DB} -out ${PROJ}_hits.fa
+${SCRIPTDIR}/filter.py ${PROJ}_hits.fa ${QUERYNAME} > ${PROJ}_filtered
+mafft-linsi --thread `nproc` ${PROJ}_filtered > ${PROJ}_filtered.mali
+${SCRIPTDIR}/conservation.py ${PROJ}_filtered.mali ${QUERYNAME} > ${PROJ}_conservation
+
+cd ..
