@@ -3,13 +3,16 @@
 
 import sys
 
+
 def beautify_fasta(sequence, per_line=60):
     '''Limit the number of characters per line for a sequence'''
     i = per_line
     while i < len(sequence):
         sequence = sequence[:i] + '\n' + sequence[i:]
         i += per_line + 1
+
     return sequence
+
 
 def test_beautify_fasta():
     '''Test beautify_fasta()'''
@@ -18,6 +21,7 @@ def test_beautify_fasta():
     assert beautify_fasta(seq) == ('MCTTGQVIRCKAAILWKPGAPFSIEEVEVAPPKAKEVRIKVVATGLCGTEMKVLGSKHLD' + '\n' +
                                    'MCTTGQVIRCKAAILWKPGAPFSIEEVEVAPPKAKEVRIKVVATGLCGTEMKVLGSKHLD')
     assert beautify_fasta(seq[:15]) == 'MCTTGQVIRCKAAILWKPGAPFSIEEVEVAPPKAKEVRIKVVATGLCGTEMKVLGSKHLD'[:15]
+
 
 def get_species(header):
     '''Get the species of a sequence'''
@@ -29,7 +33,9 @@ def get_species(header):
         return header[header.index('OS=')+3:header.index('=', header.index('OS=')+3)-2].strip()
 
     sys.stderr.write('E: Unable to identify species({})'.format(header))
+
     return 'Unknown'
+
 
 def test_get_species():
     '''Test get_species(); two cases should work and one should fail'''
@@ -39,6 +45,7 @@ def test_get_species():
     assert get_species(ncbi_head) == 'Rattus norvegicus'
     assert get_species(uniprot_head) == 'Homo sapiens'
     assert get_species(ensembl_head) == 'Unknown'
+
 
 def read_fasta(filename):
     '''Read a FASTA file and return the headers and sequences as lists'''
@@ -53,6 +60,7 @@ def read_fasta(filename):
                 seqs[-1] += line.strip()
 
     return (headers, seqs)
+
 
 def test_read_fasta():
     '''Test read_fasta() by reading a badly formatted FASTA file'''
@@ -87,6 +95,7 @@ FEEFPVALDKALGKLGRQPKQVITF'''
         tmpf.write(indata)
 
     assert read_fasta(filename) == (realhead, realseq)
+
 
 if __name__ == '__main__':
     sys.exit()

@@ -5,6 +5,7 @@ import sys
 
 import bioinfo
 
+
 def filter_length(headers, sequences, reflen, lmin=0.9, lmax=1.1):
     '''In-place removal of all sequences that are outside the limits'''
     i = 0
@@ -15,6 +16,7 @@ def filter_length(headers, sequences, reflen, lmin=0.9, lmax=1.1):
         else:
             i += 1
 
+
 def test_filter_length():
     '''Test filter_length'''
     headers = ['header1', 'header2', 'header3', 'header4']
@@ -22,6 +24,7 @@ def test_filter_length():
     answer = (headers[:2], sequences[:2])
     filter_length(headers, sequences, len(sequences[0]))
     assert (headers, sequences) == answer
+
 
 def filter_species(headers, sequences):
     '''In-place removal of any extra sequences from a species. Assumes first hit is best hit.'''
@@ -36,6 +39,7 @@ def filter_species(headers, sequences):
             species.append(spec)
             i += 1
 
+
 def test_filter_species():
     '''Test filter_species()'''
     headers = ['gi|header1 [Homo sapiens]', 'gi|header2 [Homo sapiens]',
@@ -44,6 +48,7 @@ def test_filter_species():
     answer = ([headers[0], headers[2]], [sequences[0], sequences[2]])
     filter_species(headers, sequences)
     assert (headers, sequences) == answer
+
 
 def main(filename, refseq):
     '''Read a FASTA file with sequences and remove sequences
@@ -69,6 +74,7 @@ def main(filename, refseq):
         print('>{}'.format(headers[i]))
         print(bioinfo.beautify_fasta(seqs[i]))
 
+
 def test_main(capsys):
     '''Testing main()'''
     import tempfile
@@ -93,6 +99,7 @@ ACDEFGHIKL'''
     main(filename, 'NP_000001.1')
     out, err = capsys.readouterr()
     assert out == real
+
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:

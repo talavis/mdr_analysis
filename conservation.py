@@ -6,6 +6,7 @@ import sys
 from Bio import AlignIO
 from Bio.Align import AlignInfo
 
+
 def helper_test_getalign():
     '''Generate a FASTA file for use in the testing functions'''
     import tempfile
@@ -25,6 +26,7 @@ ADDEEGHILL'''
 
     return filename
 
+
 def get_most_conserved(freq_table, align_len):
     '''Determine the most conserved residue and its conservation rate in each position
     Input should be a PSSM object or a list of dicts (PSSM.pssm, but without [0] in each tuple)'''
@@ -42,6 +44,7 @@ def get_most_conserved(freq_table, align_len):
         result.append((score, best_conserved))
 
     return result
+
 
 def test_get_most_conserved():
     '''Test get_most_conserved'''
@@ -71,6 +74,7 @@ def test_get_most_conserved():
 
     assert get_most_conserved(freq_table, 4) == real
 
+
 def make_freq_table(alignment):
     '''Make a pssm of an alignment'''
     summary = AlignInfo.SummaryInfo(alignment)
@@ -78,6 +82,7 @@ def make_freq_table(alignment):
     freq_table = summary.pos_specific_score_matrix(consensus)
 
     return freq_table
+
 
 def test_make_freq_table():
     '''Test make_freq_table'''
@@ -106,6 +111,7 @@ def test_make_freq_table():
 
     assert make_freq_table(alignment).pssm == real
 
+
 def main(filename, refseq):
     '''Read an alignment in FASTA format
     Calculate the conservation per position'''
@@ -127,6 +133,7 @@ def main(filename, refseq):
     for i in range(len(freq_table.pssm)):
         print(cons[i])
 
+
 def test_main(capsys):
     '''Test main()'''
     real = ('''(1.0, 'A')\n(0.75, 'C')\n(1.0, 'D')\n(1.0, 'E')\n(0.5, 'F')\n''' +
@@ -136,6 +143,7 @@ def test_main(capsys):
     out, err = capsys.readouterr()
 
     assert out == real
+
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
