@@ -1,0 +1,74 @@
+Taxon	Mnemonic	Scientific name	Common name	Synonym	Other Names	Reviewed	Rank	Lineage	Parent	Virus hosts
+85621		16SrII (Peanut WB group)					Species group	Bacteria; Tenericutes; Mollicutes; Acholeplasmatales; Acholeplasmataceae; Candidatus Phytoplasma	33926	
+85623		16SrIII (X-disease group)					Species group	Bacteria; Tenericutes; Mollicutes; Acholeplasmatales; Acholeplasmataceae; Candidatus Phytoplasma	33926	
+85630		16SrX (Apple proliferation group)					Species group	Bacteria; Tenericutes; Mollicutes; Acholeplasmatales; Acholeplasmataceae; Candidatus Phytoplasma	33926	
+85631		16SrXI (Rice yellow dwarf group)					Species group	Bacteria; Tenericutes; Mollicutes; Acholeplasmatales; Acholeplasmataceae; Candidatus Phytoplasma	33926	
+85632		16SrXII (Stolbur group)					Species group	Bacteria; Tenericutes; Mollicutes; Acholeplasmatales; Acholeplasmataceae; Candidatus Phytoplasma	33926	
+85633		16SrXIII (Mexican periwinkle virescence group)					Species group	Bacteria; Tenericutes; Mollicutes; Acholeplasmatales; Acholeplasmataceae; Candidatus Phytoplasma	33926	
+85634		16SrXIV (Bermuda white leaf group)					Species group	Bacteria; Tenericutes; Mollicutes; Acholeplasmatales; Acholeplasmataceae; Candidatus Phytoplasma	33926	
+102260		16SrXV (Hibiscus witches'-broom group)					Species group	Bacteria; Tenericutes; Mollicutes; Acholeplasmatales; Acholeplasmataceae; Candidatus Phytoplasma	33926	
+590438		16SrXX (Buckthorn witches'-broom group)					Species group	Bacteria; Tenericutes; Mollicutes; Acholeplasmatales; Acholeplasmataceae; Candidatus Phytoplasma	33926	
+590444		16SrXXI (Pine shoot proliferation group)					Species group	Bacteria; Tenericutes; Mollicutes; Acholeplasmatales; Acholeplasmataceae; Candidatus Phytoplasma	33926	
+590462		16SrXXII (Nigerian coconut lethal decline (LDN) group)					Species group	Bacteria; Tenericutes; Mollicutes; Acholeplasmatales; Acholeplasmataceae; Candidatus Phytoplasma	33926	
+1775905		16SrXXII-A					Species subgroup	Bacteria; Tenericutes; Mollicutes; Acholeplasmatales; Acholeplasmataceae; Candidatus Phytoplasma	590462	
+1775906		16SrXXII-B					Species subgroup	Bacteria; Tenericutes; Mollicutes; Acholeplasmatales; Acholeplasmataceae; Candidatus Phytoplasma	590462	
+1204468		actinobacterium JS2300					Species	Bacteria; Actinobacteria	78537	
+1331927		actinobacterium K15					Species	Bacteria; Actinobacteria	78537	
+1331928		actinobacterium K18					Species	Bacteria; Actinobacteria	78537	
+1331929		actinobacterium K20					Species	Bacteria; Actinobacteria	78537	
+1331930		actinobacterium K21					Species	Bacteria; Actinobacteria	78537	
+430848		alpha proteobacterium WST7-1					Species	Bacteria; Proteobacteria; Alphaproteobacteria	33807	
+430849		alpha proteobacterium WST7-3					Species	Bacteria; Proteobacteria; Alphaproteobacteria	33807	
+190143		alpha proteobacterium WTs-6					Species	Bacteria; Proteobacteria; Alphaproteobacteria	33807	
+1387484		alpha proteobacterium WY6					Species	Bacteria; Proteobacteria; Alphaproteobacteria	33807	
+451351		alpha proteobacterium X13					Species	Bacteria; Proteobacteria; Alphaproteobacteria	33807	
+1134768		Bacillus sp. SSM 65					Species	Bacteria; Firmicutes; Bacilli; Bacillales; Bacillaceae; Bacillus	1386	
+1503169		Bacillus sp. SSM2					Species	Bacteria; Firmicutes; Bacilli; Bacillales; Bacillaceae; Bacillus	1386	
+278622		Bacillus sp. S-(s)-m-D-1(1)					Species	Bacteria; Firmicutes; Bacilli; Bacillales; Bacillaceae; Bacillus	1386	
+278623		Bacillus sp. S-(s)-m-D-2(1)					Species	Bacteria; Firmicutes; Bacilli; Bacillales; Bacillaceae; Bacillus	1386	
+278624		Bacillus sp. S-(s)-m-D-3(1)					Species	Bacteria; Firmicutes; Bacilli; Bacillales; Bacillaceae; Bacillus	1386	
+1797564		Burkholderiales bacterium RIFCSPLOWO2_02_FULL_67_64					Species	Bacteria; Proteobacteria; Betaproteobacteria; Burkholderiales	80841	
+1797565		Burkholderiales bacterium RIFCSPLOWO2_12_67_14					Species	Bacteria; Proteobacteria; Betaproteobacteria; Burkholderiales	80841	
+1797566		Burkholderiales bacterium RIFCSPLOWO2_12_FULL_61_40					Species	Bacteria; Proteobacteria; Betaproteobacteria; Burkholderiales	80841	
+1797567		Burkholderiales bacterium RIFCSPLOWO2_12_FULL_64_33					Species	Bacteria; Proteobacteria; Betaproteobacteria; Burkholderiales	80841	
+1797568		Burkholderiales bacterium RIFCSPLOWO2_12_FULL_64_99					Species	Bacteria; Proteobacteria; Betaproteobacteria; Burkholderiales	80841	
+38483		Sclerotinia homoeocarpa			Sclerotinia homeocarpa	annotated	Species	Eukaryota; Fungi; Dikarya; Ascomycota; Pezizomycotina; Leotiomycetes; Helotiales; Sclerotiniaceae; Sclerotinia	5179	
+1195775		Sclerotinia homoeocarpa LT30						Eukaryota; Fungi; Dikarya; Ascomycota; Pezizomycotina; Leotiomycetes; Helotiales; Sclerotiniaceae; Sclerotinia	38483	
+217362		Sclerotinia homoeocarpa mitovirus				annotated	Species	Viruses; ssRNA viruses; ssRNA positive-strand viruses, no DNA stage; Narnaviridae; Mitovirus; unclassified Mitovirus	343865	
+38451		Sclerotinia minor				annotated	Species	Eukaryota; Fungi; Dikarya; Ascomycota; Pezizomycotina; Leotiomycetes; Helotiales; Sclerotiniaceae; Sclerotinia	5179	
+665078		Sclerotinia minor W1 UF-93						Eukaryota; Fungi; Dikarya; Ascomycota; Pezizomycotina; Leotiomycetes; Helotiales; Sclerotiniaceae; Sclerotinia	38451	
+707228										
+1762279										
+121120		Gemmata-like str. Soil9					Species	Bacteria; Planctomycetes; Planctomycetia; Planctomycetales; Planctomycetaceae	69476	
+1805167		Gemmatamonadets bacterium 13_1_20CM_2_71_41					Species	Bacteria; Gemmatimonadetes	234665	
+219687		Gemmatimonadaceae			Gemmantimonadaceae; Gemmatimonadaceae Zhang et al. 2003		Family	Bacteria; Gemmatimonadetes; Gemmatimonadales	219686	
+1387400		Gemmatimonadaceae bacterium LWQ133					Species	Bacteria; Gemmatimonadetes; Gemmatimonadales; Gemmatimonadaceae; unclassified Gemmatimonadaceae	1387399	
+219686		Gemmatimonadales			Gemmantimonadales; Gemmatimonadales Zhang et al. 2003		Order	Bacteria; Gemmatimonadetes	219685	
+454815		Naegleria sp. RNG065					Species	Eukaryota; Heterolobosea; Schizopyrenida; Vahlkampfiidae; Naegleria; unclassified Naegleria	454799	
+454816		Naegleria sp. RNG067					Species	Eukaryota; Heterolobosea; Schizopyrenida; Vahlkampfiidae; Naegleria; unclassified Naegleria	454799	
+454817		Naegleria sp. RNG073					Species	Eukaryota; Heterolobosea; Schizopyrenida; Vahlkampfiidae; Naegleria; unclassified Naegleria	454799	
+454818		Naegleria sp. RNG082					Species	Eukaryota; Heterolobosea; Schizopyrenida; Vahlkampfiidae; Naegleria; unclassified Naegleria	454799	
+454819		Naegleria sp. RNG085					Species	Eukaryota; Heterolobosea; Schizopyrenida; Vahlkampfiidae; Naegleria; unclassified Naegleria	454799	
+1400215		Norovirus Hu/GII.4/21859980/AUS/2013				annotated		Viruses; ssRNA viruses; ssRNA positive-strand viruses, no DNA stage; Caliciviridae; Norovirus	489821	
+1237024		Norovirus Hu/GII.4/21/Nara/2012/JPN				annotated		Viruses; ssRNA viruses; ssRNA positive-strand viruses, no DNA stage; Caliciviridae; Norovirus	489821	
+1246567		Norovirus Hu/GII.4/2289/Nizhny Novgorod/RUS/2010				annotated		Viruses; ssRNA viruses; ssRNA positive-strand viruses, no DNA stage; Caliciviridae; Norovirus	489821	
+1055971		Norovirus Hu/GII.4/2346/mussel/2011/ITA				annotated		Viruses; ssRNA viruses; ssRNA positive-strand viruses, no DNA stage; Caliciviridae; Norovirus	489821	
+931884		Norovirus Hu/GII.4/2405/2008/ZAF				annotated		Viruses; ssRNA viruses; ssRNA positive-strand viruses, no DNA stage; Caliciviridae; Norovirus	489821	
+9606	HUMAN	Homo sapiens	Human		Homo sapiens Linnaeus, 1758; man	reviewed	Species	Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; Eutheria; Euarchontoglires; Primates; Haplorrhini; Catarrhini; Hominidae; Homo	9605	
+63221	HOMNE	Homo sapiens neanderthalensis	Neanderthal		Feldhofer 1; Homo neanderthalensis; Neandertal; Neandertal man; Neanderthal 1; Neanderthal man	reviewed	Subspecies	Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; Eutheria; Euarchontoglires; Primates; Haplorrhini; Catarrhini; Hominidae; Homo	9606	
+741158		Homo sapiens ssp. Denisova	Denisova hominin		Denisovan; Denisovans; Homo sapiens ssp. 'Denisova'; Homo sp. Altai	annotated	Subspecies	Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; Eutheria; Euarchontoglires; Primates; Haplorrhini; Catarrhini; Hominidae; Homo	9606	
+1131344		Homo sapiens x Mus musculus hybrid cell line					Species	Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; unclassified Mammalia	1002697	
+1383439		Homo sapiens/Mus musculus xenograft					Species	Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; unclassified Mammalia	1002697	
+1573476		Homo sapiens/Rattus norvegicus xenograft					Species	Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; unclassified Mammalia	1002697	
+1035824		Trichuris sp. ex Homo sapiens JP-2011				annotated	Species	Eukaryota; Metazoa; Ecdysozoa; Nematoda; Enoplea; Dorylaimia; Trichocephalida; Trichuridae; Trichuris	36086	
+1573476		Homo sapiens/Rattus norvegicus xenograft					Species	Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; unclassified Mammalia	1002697	
+36237		Mus musculus x Rattus norvegicus				annotated	Species	Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; Eutheria; Euarchontoglires; Glires; Rodentia; Sciurognathi; Muroidea; Muridae; Murinae	39107	
+10116	RAT	Rattus norvegicus	Rat		Buffalo rat; Gunn rats; Norway rat; Rattus PC12 clone IS; Rattus norvegicus8; Rattus norwegicus; Rattus rattiscus; Rattus sp. strain Wistar; Sprague-Dawley rat; Wistar rats; brown rat; laboratory rat; rats; zitter rats	reviewed	Species	Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; Eutheria; Euarchontoglires; Glires; Rodentia; Sciurognathi; Muroidea; Muridae; Murinae; Rattus	10114	
+947987		Rattus norvegicus albus			Rattus norvegicus albus Hatai, 1907		Subspecies	Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; Eutheria; Euarchontoglires; Glires; Rodentia; Sciurognathi; Muroidea; Muridae; Murinae; Rattus	10116	
+378006		Arabidopsis arenosa x Arabidopsis thaliana					Species	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliophyta; eudicotyledons; Gunneridae; Pentapetalae; rosids; malvids; Brassicales; Brassicaceae; Camelineae; Arabidopsis	3701	
+3702	ARATH	Arabidopsis thaliana	Mouse-ear cress		Arabidopsis thaliana (L.) Heynh.; Arabidopsis thaliana (thale cress); Arabidopsis_thaliana; Arbisopsis thaliana; thale cress; thale-cress	reviewed	Species	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliophyta; eudicotyledons; Gunneridae; Pentapetalae; rosids; malvids; Brassicales; Brassicaceae; Camelineae; Arabidopsis	3701	
+1240361		Arabidopsis thaliana x Arabidopsis arenosa					Species	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliophyta; eudicotyledons; Gunneridae; Pentapetalae; rosids; malvids; Brassicales; Brassicaceae; Camelineae; Arabidopsis	3701	
+1328956		(Arabidopsis thaliana x Arabidopsis arenosa) x Arabidopsis suecica					Species	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliophyta; eudicotyledons; Gunneridae; Pentapetalae; rosids; malvids; Brassicales; Brassicaceae; Camelineae; Arabidopsis	3701	
+1837063		Arabidopsis thaliana x Arabidopsis halleri					Species	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliophyta; eudicotyledons; Gunneridae; Pentapetalae; rosids; malvids; Brassicales; Brassicaceae; Camelineae; Arabidopsis	3701	
+869751		Arabidopsis thaliana x Arabidopsis halleri subsp. gemmifera					Species	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliophyta; eudicotyledons; Gunneridae; Pentapetalae; rosids; malvids; Brassicales; Brassicaceae; Camelineae; Arabidopsis	3701	
+869750		Arabidopsis thaliana x Arabidopsis lyrata					Species	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliophyta; eudicotyledons; Gunneridae; Pentapetalae; rosids; malvids; Brassicales; Brassicaceae; Camelineae; Arabidopsis	3701	

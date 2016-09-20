@@ -11,19 +11,19 @@ class TaxNode:
         self.children = children
 
     def add_child(self, new_child):
-        '''Add a new child to the set of children'''
+        '''Add a new child to the list of children'''
         if new_child.name not in [child.name for child in self.children]:
-            self._children.add(new_child)
+            self._children.append(new_child)
 
     @property
     def children(self):
-        '''Return the set of children'''
+        '''Return the list of children'''
         return self._children
 
     @children.setter
     def children(self, new_children):
-        '''Change to a new set of children'''
-        self._children = set(new_children)
+        '''Change to a new list of children'''
+        self._children = list(new_children)
 
     @property
     def name(self):
@@ -32,7 +32,7 @@ class TaxNode:
 
     @name.setter
     def name(self, new_name):
-        '''Set the name of the node'''
+        '''List the name of the node'''
         self._name = new_name
 
     @property

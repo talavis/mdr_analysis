@@ -7,7 +7,7 @@ install:
   - pip install python-coveralls
   - pip install biopython
 script:
-  py.test -vv bioinfo.py conservation.py filter.py sort_by_blast.py --cov=bioinfo --cov=conservation --cov=filter --cov=sort_by_blast
+  ./run_tests.sh
 notifications:
   email:
     on_success: never
