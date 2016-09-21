@@ -1,9 +1,8 @@
 #!/bin/bash
 
-py.test -vv bioinfo.py conservation.py filter.py sort_by_blast.py species.py taxnode.py \
-	--cov=bioinfo\
-	--cov=conservation\
-	--cov=filter\
-	--cov=sort_by_blast\
-	--cov=species\
-	--cov=taxnode
+py.test -vv bioinfo.py --cov=bioinfo\
+	    conservation.py --cov=conservation\
+	    filter.py --cov=filter\
+	    sort_by_blast.py --cov=sort_by_blast\
+	    species.py --cov=species\
+	    taxnode.py --cov=taxnode\
