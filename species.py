@@ -7,6 +7,35 @@ import bioinfo
 import taxnode
 
 
+def find_lowest_common(node):
+    '''
+    Find the first branching of the tree, counting from the given node
+    Return: name of the branching node
+    If there are no branches, return the name of the node at the end of the tree
+    '''
+    while len(node.children) == 1:
+        node = node.children[0]
+    return node.name
+
+
+def test_find_lowest_common():
+    '''
+    Test find_lowest_common()
+    '''
+    specs1 = [[1]*8+['a; a1; a11'],
+              [1]*8+['a; a1; a12'],
+              [1]*8+['a; a2; a21'],
+              [1]*8+['b; b1; b11']]
+    root = make_taxtree(specs1)
+    assert find_lowest_common(root) == 'root'
+    specs2 = [[1]*8+['a; a1; a11'],
+              [1]*8+['a; a1; a12'],
+              [1]*8+['a; a1; a13'],
+              [1]*8+['a; a1; b14']]
+    root = make_taxtree(specs2)
+    assert find_lowest_common(root) == 'a1'
+
+
 def make_taxtree(hits):
     '''Generate a taxonomy tree from a taxonomy list
     returns the root node'''
