@@ -27,7 +27,7 @@ def test_find_highest_common():
               [1]*8+['a; a2; a21'],
               [1]*8+['b; b1; b11']]
     root = make_taxtree(specs1)
-    assert find_lowest_common(root) == 'root'
+    assert find_highest_common(root) == 'root'
     specs2 = [[1]*8+['a; a1; a11'],
               [1]*8+['a; a1; a12'],
               [1]*8+['a; a1; a13'],
