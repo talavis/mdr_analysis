@@ -7,7 +7,7 @@ import bioinfo
 import taxnode
 
 
-def find_lowest_common(node):
+def find_highest_common(node):
     '''
     Find the first branching of the tree, counting from the given node
     Return: name of the branching node
@@ -18,9 +18,9 @@ def find_lowest_common(node):
     return node.name
 
 
-def test_find_lowest_common():
+def test_find_highest_common():
     '''
-    Test find_lowest_common()
+    Test find_highest_common()
     '''
     specs1 = [[1]*8+['a; a1; a11'],
               [1]*8+['a; a1; a12'],
@@ -33,7 +33,7 @@ def test_find_lowest_common():
               [1]*8+['a; a1; a13'],
               [1]*8+['a; a1; b14']]
     root = make_taxtree(specs2)
-    assert find_lowest_common(root) == 'a1'
+    assert find_highest_common(root) == 'a1'
 
 
 def make_taxtree(hits):
@@ -127,6 +127,7 @@ def main(fasta_name, taxonomy_name):
     tax_hits = match_taxonomy(taxonomy_name, species)
     tax_tree = make_taxtree(tax_hits)
     print_tax_tree(tax_tree)
+    print('Highest common: {}'.format(find_highest_common(tax_tree)))
 
 
 def test_main(capsys):
@@ -159,9 +160,11 @@ def test_main(capsys):
                 '                      \\rosids\n                        \\malvids\n' +
                 '                          \\Brassicales\n                            ' +
                 '\\Brassicaceae\n                              \\Camelineae\n' +
-                '                                \\Arabidopsis\n')
+                '                                \\Arabidopsis\n' +
+                'Highest common: Eukaryota\n')
 
     assert out == expected
+
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
