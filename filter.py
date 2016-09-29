@@ -6,7 +6,7 @@ import sys
 import bioinfo
 
 
-def filter_length(headers, sequences, reflen, lmin=0.9, lmax=1.1):
+def filter_length(headers, sequences, reflen, lmin=0.5, lmax=1.5):
     '''In-place removal of all sequences that are outside the limits'''
     i = 0
     while i < len(sequences):
@@ -68,7 +68,7 @@ def main(filename, refseq):
 
     reflen = len(seqs[headers.index(refseq_matches[0])])
     filter_length(headers, seqs, reflen)
-    filter_species(headers, seqs)
+#    filter_species(headers, seqs)
 
     for i in range(len(headers)):
         print('>{}'.format(headers[i]))
@@ -95,7 +95,10 @@ ACDEFGHIKL'''
     real = ('>gi|0000000|ref|NP_000000.1| Made-up data [Rattus norvegicus]\n'
             + 'ACDEFGHIKL\n'
             + '>gi|0000001|ref|NP_000001.1| Made-up data [Arabidopsis thaliana]\n'
-            + 'ACDEAGHIKL\n')
+            + 'ACDEAGHIKL\n'
+            + '>gi|0000003|ref|NP_000003.1| Made-up data [Arabidopsis thaliana]\n'
+            + 'ACDEFGHIKL\n')
+
     main(filename, 'NP_000001.1')
     out, err = capsys.readouterr()
     assert out == real
