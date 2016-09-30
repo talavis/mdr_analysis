@@ -25,7 +25,7 @@ cd ${RUNDIR}
 blastp -query ${QUERY} -db ${DB} -outfmt 6 -out ${PROJ}_blastp -num_threads `nproc`
 cut -f 2 ${PROJ}_blastp > ${PROJ}_accs
 blastdbcmd -entry_batch ${PROJ}_accs -db ${DB} -out ${PROJ}_hits.fa
-${SCRIPTDIR}/filter.py ${PROJ}_hits.fa ${QUERYNAME} > ${PROJ}_filtered
+${SCRIPTDIR}/sequence_filter.py ${PROJ}_hits.fa ${QUERYNAME} > ${PROJ}_filtered
 mafft-linsi --thread `nproc` ${PROJ}_filtered > ${PROJ}_filtered.mali
 ${SCRIPTDIR}/conservation.py ${PROJ}_filtered.mali ${QUERYNAME} > ${PROJ}_conservation
 
