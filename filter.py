@@ -6,8 +6,43 @@ import sys
 import bioinfo
 
 
+def filter_nonsense(headers, sequences, unk_rate=0.2):
+    '''
+    In-place removal of all sequences that contain a lot of nonsense, e.g. X
+    '''
+    i = 0
+    while i < len(sequences):
+        if sequences[i].count('X') / len(sequences[i].replace('-', '')) > unk_rate:
+            headers.pop(i)
+            sequences.pop(i)
+        else:
+            i += 1
+
+
+def test_filter_nonsense():
+    '''Test filter_nonsense'''
+    headers = ['header1', 'header2', 'header3', 'header4']
+    sequences = ['ACDEXXXXXXXXPQRSTVWY', 'ACDEFGHIKLMNPQRSTVW',
+                 'FGXXXXQRSTVWYACDEHKLMN', 'AAAAAGIRSTVWY']
+    answer = (headers[1:], sequences[1:])
+    filter_nonsense(headers, sequences)
+    assert (headers, sequences) == answer
+    headers = ['header1', 'header2', 'header3', 'header4']
+    sequences = ['ACDEXXXXXXXXPQRSTVWY', 'ACDEFGHIKLMNPQRSTVW',
+                 'FGXXXXQRSTVWYACDEHKLMN', 'AAAAAGIRSTVWY']
+    answer = ([headers[1], headers[3]], [sequences[1], sequences[3]])
+    filter_nonsense(headers, sequences, 0.0)
+    assert (headers, sequences) == answer
+    headers = ['header1', 'header2', 'header3', 'header4']
+    sequences = ['ACDEXXXXXXXXPQRSTVWY', 'ACDEFGHIKLMNPQRSTVW',
+                 'FGXXXXQRSTVWYACDEHKLMN', 'AAAAAGIRSTVWY']
+    answer = (headers[:], sequences[:])
+    filter_nonsense(headers, sequences, 1.0)
+    assert (headers, sequences) == answer
+
+
 def filter_length(headers, sequences, reflen, lmin=0.5, lmax=1.5):
-    '''In-place removal of all sequences that are outside the limits'''
+    '''In-place removal of all sequences that are outside the supplied limits'''
     i = 0
     while i < len(sequences):
         if reflen / len(sequences[i]) < lmin or reflen / len(sequences[i]) > lmax:
@@ -20,8 +55,8 @@ def filter_length(headers, sequences, reflen, lmin=0.5, lmax=1.5):
 def test_filter_length():
     '''Test filter_length'''
     headers = ['header1', 'header2', 'header3', 'header4']
-    sequences = ['ACDEFGHIKLMNPQRSTVWY', 'ACDEFGHIKLMNPQRSTVW', 'FGHIKLMNPQRSTVWY', 'AAAAAGIRSTVWY']
-    answer = (headers[:2], sequences[:2])
+    sequences = ['ACDEFGHIKLMNPQRSTVWY', 'ACDEFGHIKLMNPQRSTVW', 'FGHIKLMNPQRSTVWY', 'AAAAAY']
+    answer = (headers[:3], sequences[:3])
     filter_length(headers, sequences, len(sequences[0]))
     assert (headers, sequences) == answer
 
@@ -69,6 +104,7 @@ def main(filename, refseq):
     reflen = len(seqs[headers.index(refseq_matches[0])])
     filter_length(headers, seqs, reflen)
 #    filter_species(headers, seqs)
+    filter_nonsense(headers, seqs)
 
     for i in range(len(headers)):
         print('>{}'.format(headers[i]))
@@ -82,7 +118,7 @@ def test_main(capsys):
     indata = '''>gi|0000000|ref|NP_000000.1| Made-up data [Rattus norvegicus]
 ACDEFGHIKL
 >gi|0000001|ref|NP_000001.1| Made-up data [Arabidopsis thaliana]
-ACDEAGHIKL
+ACXXXXXIKL
 >gi|0000002|ref|NP_000002.1| Made-up data [Homo Sapiens]
 ACD
 >gi|0000003|ref|NP_000003.1| Made-up data [Arabidopsis thaliana]
@@ -94,8 +130,6 @@ ACDEFGHIKL'''
 
     real = ('>gi|0000000|ref|NP_000000.1| Made-up data [Rattus norvegicus]\n'
             + 'ACDEFGHIKL\n'
-            + '>gi|0000001|ref|NP_000001.1| Made-up data [Arabidopsis thaliana]\n'
-            + 'ACDEAGHIKL\n'
             + '>gi|0000003|ref|NP_000003.1| Made-up data [Arabidopsis thaliana]\n'
             + 'ACDEFGHIKL\n')
 
