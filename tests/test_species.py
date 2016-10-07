@@ -56,7 +56,7 @@ def test_make_taxtree():
 def test_match_taxonomy():
     '''Test match_taxonomy()'''
     species_tup = ('Rattus norvegicus', 'Arabidopsis thaliana', 'Homo sapiens')
-    filename = 'testdata/tax_test.tab'
+    filename = 'tests/testdata/tax_test.tab'
     assert [col[0] for col in species.match_taxonomy(filename, species_tup)] == ['9606', '10116', '3702']
 
 
@@ -84,7 +84,7 @@ def test_main(capsys):
     filename_fasta = tempfile.mkstemp()[1]
     with open(filename_fasta, 'w') as tmpf:
         tmpf.write(infasta)
-    filename_tax = 'testdata/tax_test.tab'
+    filename_tax = 'tests/testdata/tax_test.tab'
     species.main(filename_fasta, filename_tax)
     out, err = capsys.readouterr()
     expected = ('\\root\n  \\Eukaryota\n    \\Metazoa\n      \\Chordata\n        ' +
