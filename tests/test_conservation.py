@@ -88,10 +88,17 @@ def test_make_freq_table():
 
 def test_main(capsys):
     '''Test main()'''
-    real = ('''(1.0, 'A')\n(0.75, 'C')\n(1.0, 'D')\n(1.0, 'E')\n(0.5, 'F')\n''' +
-            '''(1.0, 'G')\n(1.0, 'H')\n(1.0, 'I')\n(0.75, 'K')\n(1.0, 'L')\n''')
-
+    real = ('A\tA\t1.0\nC\tC\t0.75\nD\tD\t1.0\nE\tE\t1.0\nA\tF\t0.5\n' +
+            'G\tG\t1.0\nH\tH\t1.0\nI\tI\t1.0\nK\tK\t0.75\nL\tL\t1.0\n')
     conservation.main(helper_test_getalign(), 'NP_000001.1')
     out, err = capsys.readouterr()
+    assert out == real
 
+    real = (' \tA\t1.0\n \tC\t0.75\n \tD\t1.0\n \tE\t1.0\n \tF\t0.5\n' +
+            ' \tG\t1.0\n \tH\t1.0\n \tI\t1.0\n \tK\t0.75\n \tL\t1.0\n')
+    conservation.main(helper_test_getalign(), None)
+    out, err = capsys.readouterr()
+    assert out == real
+    conservation.main(helper_test_getalign())
+    out, err = capsys.readouterr()
     assert out == real

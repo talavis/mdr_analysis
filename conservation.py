@@ -35,31 +35,43 @@ def make_freq_table(alignment):
     return freq_table
 
 
-def main(filename, refseq):
+def main(filename, refseq=None):
     '''Read an alignment in FASTA format
     Calculate the conservation per position'''
     # load alignments
     alignment = AlignIO.read(filename, 'fasta')
 
     headers = [s.name for s in alignment]
-    try:
-        refind = headers.index([h for h in headers if refseq in h][0])
-    except IndexError:
-        sys.stderr.write('E: The reference sequence ({}) not found among the sequences\n'.format(refseq))
-        sys.exit(1)
+    if refseq is not None:
+        try:
+            refind = headers.index([h for h in headers if refseq in h][0])
+        except IndexError:
+            sys.stderr.write('E: The reference sequence ({}) not found among the sequences\n'.format(refseq))
+            sys.exit(1)
 
-    seqlen = len(str(alignment[refind].seq).replace('-', ''))
+        seqlen = len(str(alignment[refind].seq).replace('-', ''))
 
     freq_table = make_freq_table(alignment)
     cons = get_most_conserved(freq_table, len(alignment))
 
+    if refseq is None:
+        refseq = ' '*len(alignment[0].seq)
+    else:
+        refseq =str(alignment[refind].seq)
     for i in range(len(freq_table.pssm)):
-        print(cons[i])
+        if cons[i][1] != '-':
+            if refseq[i] != '-':
+                print('{rs}\t{mc}\t{rate:.3}'.format(rs=refseq[i], mc=cons[i][1], rate=cons[i][0]))
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        sys.stderr.write('Usage: {0} <alignment file> <reference sequence>\n'.format(sys.argv[0]))
+    if len(sys.argv) not in (2,3):
+        sys.stderr.write('Usage: {0} <alignment file> [reference seq]\n'.format(sys.argv[0]))
         sys.exit(1)
 
-    main(sys.argv[1], sys.argv[2])
+    filename = sys.argv[1]
+    if len(sys.argv) == 2:
+        refseq = None
+    else:
+        refseq = sys.argv[2]
+    main(filename, refseq)
