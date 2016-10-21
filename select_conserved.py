@@ -14,10 +14,17 @@ def main(filename, limit=0.9):
     with open(filename) as infile:
         raw = infile.read()
     lines = raw.split('\n')
+    if lines[0][0] == '#':
+        refline = lines[0]
+        lines = lines[1:]
+    else:
+        refline = None
     hits = [l for l in enumerate(lines)
             if len(l[1]) > 0 and
             float(l[1].split('\t')[2]) > limit]
 
+    if refline is not None:
+        print(refline)
     for i in range(len(hits)):
         print('{}\t{}'.format(hits[i][0] + 1, hits[i][1]))
 

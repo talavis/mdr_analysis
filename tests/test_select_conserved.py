@@ -13,6 +13,7 @@ def test_main(capsys):
     '''
     import tempfile
 
+    # without reference
     indata = ('A\tA\t0.7\n' +
               'C\tC\t0.9\n' +
               'D\tD\t0.95\n' +
@@ -34,5 +35,25 @@ def test_main(capsys):
     out, err = capsys.readouterr()
     assert out == ('1\tA\tA\t0.7\n' +
                    '2\tC\tC\t0.9\n' +
+                   '3\tD\tD\t0.95\n' +
+                   '5\tE\tE\t1\n')
+
+    # with reference sequence
+    indata = ('# refprot\n' +
+              'A\tA\t0.7\n' +
+              'C\tC\t0.9\n' +
+              'D\tD\t0.95\n' +
+              'C\tE\t0.1\n' +
+              'E\tE\t1\n' +
+              'F\tF\t0.5\n')
+
+    filename = tempfile.mkstemp()[1]
+    with open(filename, 'w') as tmpf:
+        tmpf.write(indata)
+
+    # data read
+    sc.main(filename)
+    out, err = capsys.readouterr()
+    assert out == ('# refprot\n' +
                    '3\tD\tD\t0.95\n' +
                    '5\tE\tE\t1\n')

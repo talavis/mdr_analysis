@@ -55,13 +55,14 @@ def main(filename, refseq=None):
     cons = get_most_conserved(freq_table, len(alignment))
 
     if refseq is None:
-        refseq = ' '*len(alignment[0].seq)
+        refseq_p = ' '*len(alignment[0].seq)
     else:
-        refseq =str(alignment[refind].seq)
+        refseq_p =str(alignment[refind].seq)
+        print('# {}'.format(refseq))
     for i in range(len(freq_table.pssm)):
         if cons[i][1] != '-':
-            if refseq[i] != '-':
-                print('{rs}\t{mc}\t{rate:.3}'.format(rs=refseq[i], mc=cons[i][1], rate=cons[i][0]))
+            if refseq_p[i] != '-':
+                print('{rs}\t{mc}\t{rate:.3}'.format(rs=refseq_p[i], mc=cons[i][1], rate=cons[i][0]))
 
 
 if __name__ == '__main__':
