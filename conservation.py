@@ -46,10 +46,9 @@ def main(filename, refseq=None):
         try:
             refind = headers.index([h for h in headers if refseq in h][0])
         except IndexError:
-            sys.stderr.write('E: The reference sequence ({}) not found among the sequences\n'.format(refseq))
+            error = 'E: The reference sequence ({}) not found among the sequences\n'.format(refseq)
+            sys.stderr.write(error)
             sys.exit(1)
-
-        seqlen = len(str(alignment[refind].seq).replace('-', ''))
 
     freq_table = make_freq_table(alignment)
     cons = get_most_conserved(freq_table, len(alignment))
@@ -57,16 +56,17 @@ def main(filename, refseq=None):
     if refseq is None:
         refseq_p = ' '*len(alignment[0].seq)
     else:
-        refseq_p =str(alignment[refind].seq)
+        refseq_p = str(alignment[refind].seq)
         print('# {}'.format(refseq))
     for i in range(len(freq_table.pssm)):
         if cons[i][1] != '-':
             if refseq_p[i] != '-':
-                print('{rs}\t{mc}\t{rate:.3}'.format(rs=refseq_p[i], mc=cons[i][1], rate=cons[i][0]))
+                print('{ps}\t{rs}\t{mc}\t{rate:.3}'.format(ps=i+1, rs=refseq_p[i],
+                                                           mc=cons[i][1], rate=cons[i][0]))
 
 
 if __name__ == '__main__':
-    if len(sys.argv) not in (2,3):
+    if len(sys.argv) not in (2, 3):
         sys.stderr.write('Usage: {0} <alignment file> [reference seq]\n'.format(sys.argv[0]))
         sys.exit(1)
 

@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 '''Calculate the conservation in an alignment'''
 
-import sys
+from Bio import AlignIO
 
 import conservation
-
-from Bio import AlignIO
-from Bio.Align import AlignInfo
 
 
 def helper_test_getalign():
@@ -89,15 +86,32 @@ def test_make_freq_table():
 def test_main(capsys):
     '''Test main()'''
     # with a reference sequence
-    real = ('# NP_000001.1\nA\tA\t1.0\nC\tC\t0.75\nD\tD\t1.0\nE\tE\t1.0\nA\tF\t0.5\n' +
-            'G\tG\t1.0\nH\tH\t1.0\nI\tI\t1.0\nK\tK\t0.75\nL\tL\t1.0\n')
+    real = ('# NP_000001.1\n' +
+            '1\tA\tA\t1.0\n' +
+            '2\tC\tC\t0.75\n' +
+            '3\tD\tD\t1.0\n' +
+            '4\tE\tE\t1.0\n' +
+            '5\tA\tF\t0.5\n' +
+            '6\tG\tG\t1.0\n' +
+            '7\tH\tH\t1.0\n' +
+            '8\tI\tI\t1.0\n' +
+            '9\tK\tK\t0.75\n' +
+            '10\tL\tL\t1.0\n')
     conservation.main(helper_test_getalign(), 'NP_000001.1')
     out, err = capsys.readouterr()
     assert out == real
 
     # Without reference sequence
-    real = (' \tA\t1.0\n \tC\t0.75\n \tD\t1.0\n \tE\t1.0\n \tF\t0.5\n' +
-            ' \tG\t1.0\n \tH\t1.0\n \tI\t1.0\n \tK\t0.75\n \tL\t1.0\n')
+    real = ('1\t \tA\t1.0\n' +
+            '2\t \tC\t0.75\n' +
+            '3\t \tD\t1.0\n' +
+            '4\t \tE\t1.0\n' +
+            '5\t \tF\t0.5\n' +
+            '6\t \tG\t1.0\n' +
+            '7\t \tH\t1.0\n' +
+            '8\t \tI\t1.0\n' +
+            '9\t \tK\t0.75\n' +
+            '10\t \tL\t1.0\n')
     conservation.main(helper_test_getalign(), None)
     out, err = capsys.readouterr()
     assert out == real

@@ -19,14 +19,14 @@ def main(filename, limit=0.9):
         lines = lines[1:]
     else:
         refline = None
-    hits = [l for l in enumerate(lines)
-            if len(l[1]) > 0 and
-            float(l[1].split('\t')[2]) > limit]
+    lines = [l for l in lines if len(l) > 0]
+    hits = [l for l in lines
+            if float(l.split('\t')[3]) > limit]
 
     if refline is not None:
         print(refline)
     for i in range(len(hits)):
-        print('{}\t{}'.format(hits[i][0] + 1, hits[i][1]))
+        print('{}{}'.format(int(hits[i][0]), hits[i][1:]))
 
 
 if __name__ == '__main__':
