@@ -6,7 +6,7 @@ import sys
 import bioinfo
 
 
-def filter_nonsense(headers, sequences, unk_rate=0.2):
+def filter_nonsense(headers, sequences, unk_rate=0.1):
     '''
     In-place removal of all sequences that contain a lot of nonsense, e.g. X
     '''
@@ -62,7 +62,7 @@ def main(filename, refseq):
 
     reflen = len(seqs[headers.index(refseq_matches[0])])
     filter_length(headers, seqs, reflen)
-#    filter_species(headers, seqs)
+    filter_species(headers, seqs)
     filter_nonsense(headers, seqs)
 
     for i in range(len(headers)):
