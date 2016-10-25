@@ -13,7 +13,7 @@ def test_filter_nonsense():
     '''Test filter_nonsense'''
     headers = ['header1', 'header2', 'header3', 'header4']
     sequences = ['ACDEXXXXXXXXPQRSTVWY', 'ACDEFGHIKLMNPQRSTVW',
-                 'FGXXXXQRSTVWYACDEHKLMN', 'AAAAAGIRSTVWY']
+                 'FGXXQRSTVWYACDEHKLMNA', 'AAAAAGIRSTVWY']
     answer = (headers[1:], sequences[1:])
     sequence_filter.filter_nonsense(headers, sequences)
     assert (headers, sequences) == answer
@@ -55,14 +55,14 @@ def test_main(capsys):
     '''Testing main()'''
     import tempfile
 
-    indata = '''>gi|0000000|ref|NP_000000.1| Made-up data [Rattus norvegicus]
-ACDEFGHIKL
->gi|0000001|ref|NP_000001.1| Made-up data [Arabidopsis thaliana]
-ACXXXXXIKL
->gi|0000002|ref|NP_000002.1| Made-up data [Homo Sapiens]
-ACD
->gi|0000003|ref|NP_000003.1| Made-up data [Arabidopsis thaliana]
-ACDEFGHIKL'''
+    indata = ('>gi|0000000|ref|NP_000000.1| Made-up data [Rattus norvegicus]\n' +
+              'ACDEFGHIKL\n' +
+              '>gi|0000001|ref|NP_000001.1| Made-up data [Arabidopsis thaliana]\n' +
+              'ACXXXXXIKL\n' +
+              '>gi|0000002|ref|NP_000002.1| Made-up data [Homo Sapiens]\n' +
+              'ACD\n' +
+              '>gi|0000003|ref|NP_000003.1| Made-up data [Arabidopsis thaliana]\n' +
+              'ACDEFGHIKL\n')
 
     filename = tempfile.mkstemp()[1]
     with open(filename, 'w') as tmpf:
