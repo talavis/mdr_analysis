@@ -58,11 +58,13 @@ def main(filename, refseq=None):
     else:
         refseq_p = str(alignment[refind].seq)
         print('# {}'.format(refseq))
+    p = 1
     for i in range(len(freq_table.pssm)):
         if cons[i][1] != '-':
             if refseq_p[i] != '-':
-                print('{ps}\t{rs}\t{mc}\t{rate:.3}'.format(ps=i+1, rs=refseq_p[i],
+                print('{ps}\t{rs}\t{mc}\t{rate:.3}'.format(ps=p, rs=refseq_p[i],
                                                            mc=cons[i][1], rate=cons[i][0]))
+                p += 1
 
 
 if __name__ == '__main__':
