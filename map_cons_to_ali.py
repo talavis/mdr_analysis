@@ -8,22 +8,34 @@ import sys
 import bioinfo
 
 
-def map_cons(headers, seqs, ali_data, data):
+def map_cons(headers, seqs, data):
     '''
     Map a conserved position to the alignment
     '''
-    prot = [header for header in headers if data[0] in head]
-    for dat in range(len(data)):
-        pos = map_posdata(data[dat][0]-1, seqs[headers.index(prot)])
-        ali_data[pos] = data[dat][3]
+    prot = [header for header in headers if data[0] in header][0]
+    pos_rat = data[1:]
+    ali_data = [0.0]*len(seqs[0])
+    for posi in range(len(pos_rat[0])):
+        pos = map_pos(pos_rat[0][posi], seqs[headers.index(prot)])
+        ali_data[pos] = pos_rat[1][posi]
     return ali_data
 
-def map_pos(pos, protein):
+
+def map_pos(pos, sequence):
     '''
     Map a position in a protein to the position in the alignment
-    Pos 1 = 0
+    input: pos1 = 1
+    output: pos1 = 0
     '''
-    pass
+    p = 0
+    for i in range(len(sequence)):
+        if sequence[i] != '-':
+            p += 1
+        if p == pos:
+            return i
+    err = 'E: position {} not found in {}\n'.format(pos, sequence[:20])
+    sys.stderr.write(err)
+    return False
 
 
 def main(fasta_name, data_files):
@@ -31,19 +43,16 @@ def main(fasta_name, data_files):
     Map conservation data to an alignment
     '''
     heads, seqs = bioinfo.read_fasta(fasta_name)
-    data = list()
     ali_cons = list()
     for d_file in data_files:
         cons = read_data(d_file)
         if cons == -1:
             return -1
-        data.append(read_data(cons))
-        ali_cols.append([0.0]*len(seqs[0]))
-    
-    
-    # put data in correct positions
-    # print alignment with data
-    # option to only show positions with any data > 
+        ali_cons.append(map_cons(heads, seqs, cons))
+    for i in range(len(seqs)):
+        print('{}\t{}'.format(heads[i], '\t'.join([c for c in seqs[i]])))
+    for i in range(len(ali_cons)):
+        print('\t{}'.format('\t'.join([str(r) for r in ali_cons[i]])))
 
 
 def read_data(filename):
@@ -66,8 +75,8 @@ def read_data(filename):
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
-        sys.stderr.write('Usage: {} <fasta alignment> <data files>\n'.format(sys.argv[0]))
+        USAGE = 'Usage: {} <fasta alignment> <data files>\n'.format(sys.argv[0])
+        sys.stderr.write(USAGE)
         sys.exit(1)
     if main(sys.argv[1], sys.argv[2:]) == -1:
         sys.exit(1)
-    
