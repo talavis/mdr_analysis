@@ -43,16 +43,19 @@ def main(fasta_name, data_files):
     Map conservation data to an alignment
     '''
     heads, seqs = bioinfo.read_fasta(fasta_name)
+    consnames = list()
     ali_cons = list()
     for d_file in data_files:
         cons = read_data(d_file)
         if cons == -1:
             return -1
         ali_cons.append(map_cons(heads, seqs, cons))
+        consnames.append(cons[0])
     for i in range(len(seqs)):
         print('{}\t{}'.format(heads[i], '\t'.join([c for c in seqs[i]])))
     for i in range(len(ali_cons)):
-        print('\t{}'.format('\t'.join([str(r) for r in ali_cons[i]])))
+        print('{}\t{}'.format(consnames[i],
+                              '\t'.join([str(r) for r in ali_cons[i]])))
 
 
 def read_data(filename):
