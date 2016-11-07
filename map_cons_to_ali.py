@@ -52,9 +52,10 @@ def main(fasta_name, data_files):
         ali_cons.append(map_cons(heads, seqs, cons))
         consnames.append(cons[0])
     for i in range(len(seqs)):
-        print('{}\t{}'.format(heads[i], '\t'.join([c for c in seqs[i]])))
+        print('{}\t{}'.format('ali:' + heads[i],
+                              '\t'.join([c for c in seqs[i]])))
     for i in range(len(ali_cons)):
-        print('{}\t{}'.format(consnames[i],
+        print('{}\t{}'.format('cons:' + consnames[i],
                               '\t'.join([str(r) for r in ali_cons[i]])))
 
 
