@@ -80,8 +80,8 @@ def test_main(capsys):
     assert out == ('prot1\tA\tC\tC\tD\tE\tF\t-\n' +
                    'prot2\tA\t-\tD\tD\tE\tF\tG\n' +
                    'prot3\tA\t-\t-\tD\tE\tF\tG\n' +
-                   '\t0.7\t0.0\t0.9\t0.95\t0.1\t1.0\t0.5\n' +
-                   '\t0.1\t0.5\t0.82\t0.13\t1.0\t0.05\t0.0\n')
+                   'prot2\t0.7\t0.0\t0.9\t0.95\t0.1\t1.0\t0.5\n' +
+                   'prot1\t0.1\t0.5\t0.82\t0.13\t1.0\t0.05\t0.0\n')
 
 
 def test_read_data():
