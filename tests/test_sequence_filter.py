@@ -55,6 +55,7 @@ def test_main(capsys):
     '''Testing main()'''
     import tempfile
 
+    # correct file
     indata = ('>gi|0000000|ref|NP_000000.1| Made-up data [Rattus norvegicus]\n' +
               'ACDEFGHIKL\n' +
               '>gi|0000001|ref|NP_000001.1| Made-up data [Arabidopsis thaliana]\n' +
@@ -63,7 +64,6 @@ def test_main(capsys):
               'ACD\n' +
               '>gi|0000003|ref|NP_000003.1| Made-up data [Arabidopsis thaliana]\n' +
               'ACDEFGHIKL\n')
-
     filename = tempfile.mkstemp()[1]
     with open(filename, 'w') as tmpf:
         tmpf.write(indata)
@@ -76,3 +76,19 @@ def test_main(capsys):
     sequence_filter.main(filename, 'NP_000001.1')
     out, err = capsys.readouterr()
     assert out == real
+
+    # incorrect reference
+    sequence_filter.main(filename, 'incorrect')
+    out, err = capsys.readouterr()
+    assert err == 'E: Reference sequence (incorrect) not found in the sequence file\n'
+
+    # reference matching multiple
+    sequence_filter.main(filename, 'NP_')
+    out, err = capsys.readouterr()
+    expected = ('E: Reference sequence (NP_) matches multiple ' +
+                'sequences in the sequence file\n' +
+                'E: Match example: gi|0000000|ref|NP_000000.1| ' +
+                'Made-up data [Rattus norvegicus]\n' +
+                'E: Match example: gi|0000001|ref|NP_000001.1| ' +
+                'Made-up data [Arabidopsis thaliana]\n')
+    assert err == expected
