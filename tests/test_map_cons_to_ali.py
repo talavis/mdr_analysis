@@ -43,6 +43,7 @@ def test_main(capsys):
     '''
     import tempfile
 
+    # correct
     indata1 = ('# prot2\n' +
                '1\tA\tA\t0.7\n' +
                '2\tC\tC\t0.9\n' +
@@ -82,6 +83,18 @@ def test_main(capsys):
                    'ali:prot3\tA\t-\t-\tD\tE\tF\tG\n' +
                    'cons:prot2\t0.7\t0.0\t0.9\t0.95\t0.1\t1.0\t0.5\n' +
                    'cons:prot1\t0.1\t0.5\t0.82\t0.13\t1.0\t0.05\t0.0\n')
+    # no reference in data file
+    indata = ('1\tA\tA\t0.1\n' +
+              '2\tC\tC\t0.5\n' +
+              '3\tD\tD\t0.82\n' +
+              '4\tC\tE\t0.13\n' +
+              '5\tE\tE\t1.0\n' +
+              '6\t\tF\t0.05\n')
+    data_name = tempfile.mkstemp()[1]
+    with open(data_name, 'w') as tmpf:
+        tmpf.write(indata)
+
+    assert mca.main(fasta_name, [data_name]) is False
 
 
 def test_read_data():
@@ -90,6 +103,7 @@ def test_read_data():
     '''
     import tempfile
 
+    # correct
     indata = ('# refprot\n' +
               '1\tA\tA\t0.7\n' +
               '2\tC\tC\t0.9\n' +
@@ -106,3 +120,16 @@ def test_read_data():
     ratios = [0.7, 0.9, 0.95, 0.1, 1, 0.5]
     expected = ('refprot', positions, ratios)
     assert mca.read_data(filename) == expected
+
+    # no reference in data file
+    indata = ('1\tA\tA\t0.1\n' +
+              '2\tC\tC\t0.5\n' +
+              '3\tD\tD\t0.82\n' +
+              '4\tC\tE\t0.13\n' +
+              '5\tE\tE\t1.0\n' +
+              '6\t\tF\t0.05\n')
+    data_name = tempfile.mkstemp()[1]
+    with open(data_name, 'w') as tmpf:
+        tmpf.write(indata)
+
+    assert mca.read_data(data_name) is False

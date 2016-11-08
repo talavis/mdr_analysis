@@ -47,8 +47,8 @@ def main(fasta_name, data_files):
     ali_cons = list()
     for d_file in data_files:
         cons = read_data(d_file)
-        if cons == -1:
-            return -1
+        if cons is False:
+            return False
         ali_cons.append(map_cons(heads, seqs, cons))
         consnames.append(cons[0])
     for i in range(len(seqs)):
@@ -68,7 +68,7 @@ def read_data(filename):
     lines = raw.split('\n')
     if lines[0][0] != '#':
         sys.stderr.write('E: the file {} has no reference\n'.format(filename))
-        return -1
+        return False
     protname = lines[0][1:].strip()
     lines = [l for l in lines[1:] if len(l) > 0]
     data = [line.split('\t') for line in lines]
@@ -82,5 +82,5 @@ if __name__ == '__main__':
         USAGE = 'Usage: {} <fasta alignment> <data files>\n'.format(sys.argv[0])
         sys.stderr.write(USAGE)
         sys.exit(1)
-    if main(sys.argv[1], sys.argv[2:]) == -1:
+    if main(sys.argv[1], sys.argv[2:]) is False:
         sys.exit(1)
