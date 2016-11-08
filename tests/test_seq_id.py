@@ -72,7 +72,7 @@ def test_main(capsys):
     expected = 'Median: 0.5243\nAverage: 0.5342\nMax: 0.7603\nMin: 0.3179\n'
     assert out == (expected)
     # test incorrect config
-    assert seq_id.main(fasta_filename, ['qq']) == 'Unknown option: qq'
+    assert seq_id.main(fasta_filename, ['qq']) is False
     assert seq_id.main(fasta_filename, ['gm']) is None
     out, err = capsys.readouterr()
     expected = 'Median: 0.5\nAverage: 0.5143\nMax: 0.725\nMin: 0.3179\n'
@@ -99,14 +99,17 @@ def test_print_stats(capsys):
                    'Max: 0.5432\nMin: 0.1234\n')
 
 
-def test_set_config():
+def test_set_config(capsys):
     '''
     Test set_config()
     '''
     # one option
     assert seq_id.set_config(['gm']) == [False, True]
     # incorrect option
-    assert seq_id.set_config(['as']) == 'Unknown option: as'
+    assert seq_id.set_config(['as']) is False
+    out, err = capsys.readouterr()
+    expected = 'E: unknown option: as\n'
+    assert err == expected
     # multiple options, "incorrect" order
     assert seq_id.set_config(['sn', 'gs']) == [True, False]
     # should use the last given parameter if multiple copies are given

@@ -48,8 +48,9 @@ def main(filename, options=[]):
     Optionally print basic statistics
     '''
     config = set_config(options)
-    if isinstance(config, str):  # something went wrong
-        return config
+    if config is False:
+        return False
+
     heads, seqs = bioinfo.read_fasta(filename)
     seq_ids = calc_seqids(seqs, config[0])
     if config[1]:
@@ -80,7 +81,8 @@ def set_config(options):
             tmp = accepted[opt]
             config[tmp[0]] = tmp[1]
         except KeyError:
-            return 'Unknown option: {}'.format(opt)
+            sys.stderr.write('E: unknown option: {}\n'.format(opt))
+            return False
     return config
 
 
@@ -91,6 +93,5 @@ if __name__ == '__main__':
         sys.stderr.write(USAGE_INFO)
         sys.exit()
 
-    RUNSTATUS = main(sys.argv[1])
-    if RUNSTATUS is not None:
-        sys.stderr.write('E: {}\n'.format(RUNSTATUS))
+    if main(sys.argv[1]) is False:
+        sys.exit(1)
