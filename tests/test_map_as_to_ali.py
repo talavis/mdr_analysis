@@ -57,16 +57,99 @@ def test_get_structseq(capsys):
     assert err == 'E: could not retrieve sequence for structure abcde\n'
 
 
+def test_main(capsys):
+    '''
+    Test main()
+    '''
+    import tempfile
+
+    inasdata = ('- Num  Res. Type ---- SS Molecule ---- Object - sf - sfRatio\n' +
+                '   1  ser   Amino    S _  a            pdbc     3.3  0.02  .  a_pdbc.a/^S1\n' +
+                '   7  ile   Amino    I H  a            pdbc    37.0  0.16  .  a_pdbc.a/^I7\n')
+    asdata_name = tempfile.mkstemp()[1]
+    with open(asdata_name, 'w') as tmpf:
+        tmpf.write(inasdata)
+
+    # with fasta
+    inseq = ('>prot1\n' +
+             'STA-GKVIKCKAAVLW\n' +
+             '>prot2\n' +
+             'STAAGK-IKCKAAV-W\n' +
+             '>prot3\n' +
+             'S-ATGKLIKCKAAVL-\n')
+    fasta_name = tempfile.mkstemp()[1]
+    with open(fasta_name, 'w') as tmpf:
+        tmpf.write(inseq)
+
+    maa.main(fasta_name, 'prot1', '1u3w', asdata_name)
+    out, err = capsys.readouterr()
+    assert out == ('ali:prot1\tS\tT\tA\t-\tG\tK\tV\tI\tK\tC\tK\tA\tA\tV\tL\tW\n' +
+                   'ali:prot2\tS\tT\tA\tA\tG\tK\t-\tI\tK\tC\tK\tA\tA\tV\t-\tW\n' +
+                   'ali:prot3\tS\t-\tA\tT\tG\tK\tL\tI\tK\tC\tK\tA\tA\tV\tL\t-\n' +
+                   'as:prot1_1u3w\tX\t\t\t\t\t\t\tX\t\t\t\t\t\t\t\t\n')
+
+    # with map
+    inmap = ('ali:prot1\tS\tT\tA\t-\tG\tK\tV\tI\tK\tC\tK\tA\tA\tV\tL\tW\n' +
+             'ali:prot2\tS\tT\tA\tA\tG\tK\t-\tI\tK\tC\tK\tA\tA\tV\t-\tW\n' +
+             'ali:prot3\tS\t-\tA\tT\tG\tK\tL\tI\tK\tC\tK\tA\tA\tV\tL\t-\n' +
+             'cons:prot2\t0.7\t0.0\t0.9\t0.95\t0.1\t1.0\t0.5\n' +
+             'cons:prot1\t0.1\t0.5\t0.82\t0.13\t1.0\t0.05\t0.0\n')
+
+    map_name = tempfile.mkstemp()[1]
+    with open(map_name, 'w') as tmpf:
+        tmpf.write(inmap)
+
+    maa.main(map_name, 'prot1', '1u3w', asdata_name)
+    out, err = capsys.readouterr()
+    assert out == ('ali:prot1\tS\tT\tA\t-\tG\tK\tV\tI\tK\tC\tK\tA\tA\tV\tL\tW\n' +
+                   'ali:prot2\tS\tT\tA\tA\tG\tK\t-\tI\tK\tC\tK\tA\tA\tV\t-\tW\n' +
+                   'ali:prot3\tS\t-\tA\tT\tG\tK\tL\tI\tK\tC\tK\tA\tA\tV\tL\t-\n' +
+                   'cons:prot2\t0.7\t0.0\t0.9\t0.95\t0.1\t1.0\t0.5\n' +
+                   'cons:prot1\t0.1\t0.5\t0.82\t0.13\t1.0\t0.05\t0.0\n' +
+                   'as:prot1_1u3w\tX\t\t\t\t\t\t\tX\t\t\t\t\t\t\t\t\n')
+
+    # incorrect structure
+    assert maa.main(map_name, 'prot1', 'asdfg', asdata_name) is False
+
+    # incorrect reference
+    assert maa.main(map_name, '1torp', '1u3w', asdata_name) is False
+
+    # incorrect icmfile
+    assert maa.main(map_name, 'prot1', '1u3w', '______.txt') is False
+
+    # incorrect positions
+    inasdata = ('- Num  Res. Type ---- SS Molecule ---- Object - sf - sfRatio\n' +
+                '   1  ser   Amino    S _  a            pdbc     3.3  0.02  .  a_pdbc.a/^S1\n' +
+                ' 100  ile   Amino    I H  a            pdbc    37.0  0.16  .  a_pdbc.a/^I100\n')
+    asdata_name = tempfile.mkstemp()[1]
+    with open(asdata_name, 'w') as tmpf:
+        tmpf.write(inasdata)
+
+    assert maa.main(map_name, 'prot1', '1u3w', asdata_name) is False
+
+    # incorrect mapping
+    inasdata = ('- Num  Res. Type ---- SS Molecule ---- Object - sf - sfRatio\n' +
+                '   1  ser   Amino    S _  a            pdbc     3.3  0.02  .  a_pdbc.a/^S1\n' +
+                '   7  val   Amino    V H  a            pdbc    37.0  0.16  .  a_pdbc.a/^V7\n')
+    asdata_name = tempfile.mkstemp()[1]
+    with open(asdata_name, 'w') as tmpf:
+        tmpf.write(inasdata)
+
+    assert maa.main(map_name, 'prot1', '1u3w', asdata_name) is False
+
+
 def test_map_as():
     '''
     Test map_as()
     '''
+    # without gaps
     heads = ['prot1', 'prot2', 'prot3']
     seqs = ['ACDEF', 'ADDEF', 'ACDEH']
     ref = 'prot3'
     as_pos = [0, 1, 4]
     expected = ['X', 'X', '', '', 'X']
     assert maa.map_as(heads, seqs, ref, as_pos) == expected
+    # with gaps
     heads = ['prot1', 'prot2', 'prot3']
     seqs = ['ACDEF-HIKLMNP-RST',
             '-CDEFGHIKLMNPQ-ST',
@@ -78,6 +161,8 @@ def test_map_as():
                 '', '', 'X', '', '',
                 '', '']
     assert maa.map_as(heads, seqs, ref, as_pos) == expected
+    # incorrect reference
+    assert maa.map_as(heads, seqs, 'incorrect', as_pos) is False
 
 
 def test_map_pos(capsys):
@@ -125,87 +210,39 @@ def test_map_struct(capsys):
                 'NTGKIVVELPHSVNSKL')
     positions = [66, 72, 106, 271, 285]
     residues = ['N', 'Y', 'Y', 'G', 'L']
+
     # correct mapping
     expected = [74, 80, 114, 279, 293]
     assert maa.map_struct(struct_seq, prot_seq, positions, residues) == expected
+
     # incorrect residue
     residues = ['N', 'Y', 'A', 'G', 'L']
     assert maa.map_struct(struct_seq, prot_seq, positions, residues) is False
     out, err = capsys.readouterr()
     assert err == ('E: the protein structure does not match the position data; ' +
                    'Position 106 should be A, but is Y\n')
+
     # incorrect mapping
     residues = ['H', 'Y', 'Y', 'G', 'L']
     positions = [3, 66, 72, 106, 271, 285]
     assert maa.map_struct(struct_seq, prot_seq, positions, residues) is False
     out, err = capsys.readouterr()
     assert err == 'E: the structure sequence HHHHH is not found in the protein'
+    
 
-
-def test_main(capsys):
-    '''
-    Test main()
-    '''
-    import tempfile
-
-    inasdata = ('- Num  Res. Type ---- SS Molecule ---- Object - sf - sfRatio\n' +
-                '   1  ser   Amino    S _  a            pdbc     3.3  0.02  .  a_pdbc.a/^S1\n' +
-                '   7  ile   Amino    I H  a            pdbc    37.0  0.16  .  a_pdbc.a/^I7\n')
-    asdata_name = tempfile.mkstemp()[1]
-    with open(asdata_name, 'w') as tmpf:
-        tmpf.write(inasdata)
-
-    # with fasta
-    inseq = ('>prot1\n' +
-             'STA-GKVIKCKAAVLW\n' +
-             '>prot2\n' +
-             'STAAGK-IKCKAAV-W\n' +
-             '>prot3\n' +
-             'S-ATGKLIKCKAAVL-\n')
-    fasta_name = tempfile.mkstemp()[1]
-    with open(fasta_name, 'w') as tmpf:
-        tmpf.write(inseq)
-
-    maa.main(fasta_name, 'prot1', '1u3w', asdata_name)
-    out, err = capsys.readouterr()
-    assert out == ('ali:prot1\tS\tT\tA\t-\tG\tK\tV\tI\tK\tC\tK\tA\tA\tV\tL\tW\n' +
-                   'ali:prot2\tS\tT\tA\tA\tG\tK\t-\tI\tK\tC\tK\tA\tA\tV\t-\tW\n' +
-                   'ali:prot3\tS\t-\tA\tT\tG\tK\tL\tI\tK\tC\tK\tA\tA\tV\tL\t-\n' +
-                   'as:prot1_1u3w\tX\t\t\t\t\t\t\tX\t\t\t\t\t\t\t\t\n')
-
-    # with map
-    inmap = ('ali:prot1\tS\tT\tA\t-\tG\tK\tV\tI\tK\tC\tK\tA\tA\tV\tL\tW\n' +
-             'ali:prot2\tS\tT\tA\tA\tG\tK\t-\tI\tK\tC\tK\tA\tA\tV\t-\tW\n' +
-             'ali:prot3\tS\t-\tA\tT\tG\tK\tL\tI\tK\tC\tK\tA\tA\tV\tL\t-\n' +
-             'cons:prot2\t0.7\t0.0\t0.9\t0.95\t0.1\t1.0\t0.5\n' +
-             'cons:prot1\t0.1\t0.5\t0.82\t0.13\t1.0\t0.05\t0.0\n')
-
-    map_name = tempfile.mkstemp()[1]
-    with open(map_name, 'w') as tmpf:
-        tmpf.write(inmap)
-    maa.main(map_name, 'prot1', '1u3w', asdata_name)
-    out, err = capsys.readouterr()
-    assert out == ('ali:prot1\tS\tT\tA\t-\tG\tK\tV\tI\tK\tC\tK\tA\tA\tV\tL\tW\n' +
-                   'ali:prot2\tS\tT\tA\tA\tG\tK\t-\tI\tK\tC\tK\tA\tA\tV\t-\tW\n' +
-                   'ali:prot3\tS\t-\tA\tT\tG\tK\tL\tI\tK\tC\tK\tA\tA\tV\tL\t-\n' +
-                   'cons:prot2\t0.7\t0.0\t0.9\t0.95\t0.1\t1.0\t0.5\n' +
-                   'cons:prot1\t0.1\t0.5\t0.82\t0.13\t1.0\t0.05\t0.0\n' +
-                   'as:prot1_1u3w\tX\t\t\t\t\t\t\tX\t\t\t\t\t\t\t\t\n')
-
-
-def test_read_icmdata():
+def test_read_icmdata(capsys):
     '''
     Test read_icmdata()
     '''
     import tempfile
 
+    # correct file
     indata = ('- Num  Res. Type ---- SS Molecule ---- Object - sf - sfRatio\n' +
               '   66  asn   Amino    N _  a            pdbc     3.3  0.02  .  a_pdbc.a/^N66\n' +
               '   72  tyr   Amino    Y H  a            pdbc    37.0  0.16  .  a_pdbc.a/^Y72\n' +
               '  106  tyr   Amino    Y _  a            pdbc    20.5  0.09  .  a_pdbc.a/^Y106\n' +
               '  271  gly   Amino    G _  a            pdbc     0.8  0.01  .  a_pdbc.a/^G271\n' +
               '  285  leu   Amino    L H  b            pdbc    18.5  0.09  .  a_pdbc.b/^L285\n')
-
     filename = tempfile.mkstemp()[1]
     with open(filename, 'w') as tmpf:
         tmpf.write(indata)
@@ -214,6 +251,37 @@ def test_read_icmdata():
     residues = ['N', 'Y', 'Y', 'G', 'L']
     expected = (positions, residues)
     assert maa.read_icmdata(filename) == expected
+
+    # without header
+    indata = ('   66  asn   Amino    N _  a            pdbc     3.3  0.02  .  a_pdbc.a/^N66\n' +
+              '   72  tyr   Amino    Y H  a            pdbc    37.0  0.16  .  a_pdbc.a/^Y72\n' +
+              '  106  tyr   Amino    Y _  a            pdbc    20.5  0.09  .  a_pdbc.a/^Y106\n' +
+              '  271  gly   Amino    G _  a            pdbc     0.8  0.01  .  a_pdbc.a/^G271\n' +
+              '  285  leu   Amino    L H  b            pdbc    18.5  0.09  .  a_pdbc.b/^L285\n')
+    filename = tempfile.mkstemp()[1]
+    with open(filename, 'w') as tmpf:
+        tmpf.write(indata)
+    assert maa.read_icmdata(filename) == expected
+
+    # file not existing
+    assert maa.read_icmdata('______.txt') is False
+    out, err = capsys.readouterr()
+    assert err == 'E: file ______.txt not found\n'
+
+    # incorrect formatting in file
+    indata = ('- Num  Res. Type ---- SS Molecule ---- Object - sf - sfRatio\n' +
+              '   6  6  asn   Amino    N _  a            pdbc     3.3  0.02  .  a_pdbc.a/^N66\n' +
+              '   7 2  tyr   Amino    Y H  a            pdbc    37.0  0.16  .  a_pdbc.a/^Y72\n' +
+              '  106  tyr   Amino    Y _  a            pdbc    20.5  0.09  .  a_pdbc.a/^Y106\n' +
+              '271  gly   Amino    G _  a            pdbc     0.8  0.01  .  a_pdbc.a/^G271\n' +
+              'incorrect')
+    filename = tempfile.mkstemp()[1]
+    with open(filename, 'w') as tmpf:
+        tmpf.write(indata)
+
+    assert maa.read_icmdata(filename) is False
+    out, err = capsys.readouterr()
+    assert err == 'E: unable to parse positions in file {}\n'.format(filename)
 
 
 def test_read_map_raw():

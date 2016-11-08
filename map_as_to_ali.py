@@ -41,6 +41,49 @@ def get_structseq(pdb):
     return (heads, seqs)
 
 
+def main(map_name, refprot, struct_name, icmres_file):
+    '''
+    Map active site data to an alignment
+    '''
+    inmap = open(map_name).read()
+    if inmap[0] == '>':
+        # FASTA
+        heads, seqs = bioinfo.read_fasta_raw(inmap)
+        data = []
+    else:
+        # data map
+        heads, seqs, data = read_map_raw(inmap)
+
+    structseq = get_structseq(struct_name)
+    if structseq is False:
+        return False
+    structseq = structseq[1][0]
+
+    as_data = read_icmdata(icmres_file)
+    if as_data is False:
+        return False
+    refind = find_refprot_index(refprot, heads)
+    if refind is False:
+        return False
+    positions = map_struct(structseq, seqs[refind], as_data[0], as_data[1])
+    if positions is False:
+        return False
+
+    asali_map = map_as(heads, seqs, refprot, positions)
+    if asali_map is False:
+        return False
+
+    for i in range(len(seqs)):
+        if heads[0][:4] == 'ali:':
+            print('{}\t{}'.format(heads[i], '\t'.join([c for c in seqs[i]])))
+        else:
+            print('ali:{}\t{}'.format(heads[i], '\t'.join([c for c in seqs[i]])))
+    for i in range(len(data)):
+        print(data[i])
+    print('{}\t{}'.format('as:{}_{}'.format(refprot, struct_name),
+                          '\t'.join(asali_map)))
+
+
 def map_as(headers, seqs, refprot, as_pos):
     '''
     Map active site positions to an alignment
@@ -97,65 +140,34 @@ def map_struct(struct_seq, prot_seq, positions, residues):
     return new_pos
 
 
-def main(map_name, refprot, struct_name, icmres_file):
-    '''
-    Map active site data to an alignment
-    '''
-    inmap = open(map_name).read()
-    if inmap[0] == '>':
-        # FASTA
-        heads, seqs = bioinfo.read_fasta_raw(inmap)
-        data = []
-    else:
-        # data map
-        heads, seqs, data = read_map_raw(inmap)
-
-    structseq = get_structseq(struct_name)
-    if structseq is False:
-        return False
-    structseq = structseq[1][0]
-
-    as_pos, as_res = read_icmdata(icmres_file)
-    refind = find_refprot_index(refprot, heads)
-    if refind is False:
-        return False
-    positions = map_struct(structseq, seqs[refind], as_pos, as_res)
-    if positions is False:
-        return False
-
-    asali_map = map_as(heads, seqs, refprot, positions)
-    if asali_map is False:
-        return False
-
-    for i in range(len(seqs)):
-        if heads[0][:4] == 'ali:':
-            print('{}\t{}'.format(heads[i], '\t'.join([c for c in seqs[i]])))
-        else:
-            print('ali:{}\t{}'.format(heads[i], '\t'.join([c for c in seqs[i]])))
-    for i in range(len(data)):
-        print(data[i])
-    print('{}\t{}'.format('as:{}_{}'.format(refprot, struct_name),
-                          '\t'.join(asali_map)))
-
-
 def read_icmdata(filename):
     '''
     Read active site data
     Should be the output of Res(site_def) from ICM
     '''
-    with open(filename) as infile:
-        raw = infile.read()
-    lines = raw.split('\n')
-    # check/remove header and empty lines
-    if lines[0][0] == '-':
-        lines = [line for line in lines[1:] if len(line) > 0]
-    else:
-        lines = [line for line in lines if len(line) > 0]
-    data = [line.split() for line in lines]
-    # remove non-amino acids
-    data = [dat for dat in data if dat[2] == 'Amino']
-    positions = [int(dat[0]) for dat in data]
-    residues = [dat[3] for dat in data]
+    try:
+        with open(filename) as infile:
+            raw = infile.read()
+        lines = raw.split('\n')
+    except FileNotFoundError:
+        error = 'E: file {} not found\n'.format(filename)
+        sys.stderr.write(error)
+        return False
+    try:
+        # check/remove header and empty lines
+        if lines[0][0] == '-':
+            lines = [line for line in lines[1:] if len(line) > 0]
+        else:
+            lines = [line for line in lines if len(line) > 0]
+        data = [line.split() for line in lines]
+        # remove non-amino acids
+        data = [dat for dat in data if dat[2] == 'Amino']
+        positions = [int(dat[0]) for dat in data]
+        residues = [dat[3] for dat in data]
+    except IndexError:
+        error = 'E: unable to parse positions in file {}\n'.format(filename)
+        sys.stderr.write(error)
+        return False
     return (positions, residues)
 
 
