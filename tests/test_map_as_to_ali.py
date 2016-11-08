@@ -127,16 +127,6 @@ def test_main(capsys):
 
     assert maa.main(map_name, 'prot1', '1u3w', asdata_name) is False
 
-    # incorrect mapping
-    inasdata = ('- Num  Res. Type ---- SS Molecule ---- Object - sf - sfRatio\n' +
-                '   1  ser   Amino    S _  a            pdbc     3.3  0.02  .  a_pdbc.a/^S1\n' +
-                '   7  val   Amino    V H  a            pdbc    37.0  0.16  .  a_pdbc.a/^V7\n')
-    asdata_name = tempfile.mkstemp()[1]
-    with open(asdata_name, 'w') as tmpf:
-        tmpf.write(inasdata)
-
-    assert maa.main(map_name, 'prot1', '1u3w', asdata_name) is False
-
 
 def test_map_as():
     '''

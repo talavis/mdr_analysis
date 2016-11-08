@@ -70,8 +70,6 @@ def main(map_name, refprot, struct_name, icmres_file):
         return False
 
     asali_map = map_as(heads, seqs, refprot, positions)
-    if asali_map is False:
-        return False
 
     for i in range(len(seqs)):
         if heads[0][:4] == 'ali:':
