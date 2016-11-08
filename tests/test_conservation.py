@@ -118,3 +118,9 @@ def test_main(capsys):
     conservation.main(helper_test_getalign())
     out, err = capsys.readouterr()
     assert out == real
+
+    # incorrect reference
+    conservation.main(helper_test_getalign(), 'incorrect') is False
+    out, err = capsys.readouterr()
+    expected = 'E: The reference sequence (incorrect) not found among the sequences\n'
+    assert err == expected

@@ -48,7 +48,7 @@ def main(filename, refseq=None):
         except IndexError:
             error = 'E: The reference sequence ({}) not found among the sequences\n'.format(refseq)
             sys.stderr.write(error)
-            sys.exit(1)
+            return False
 
     freq_table = make_freq_table(alignment)
     cons = get_most_conserved(freq_table, len(alignment))
