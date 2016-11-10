@@ -87,3 +87,15 @@ def read_fasta_raw(raw):
             seqs[-1] += line.strip()
 
     return (headers, seqs)
+
+
+def res_at_pos(protseq, positions):
+    '''
+    Get a list of the residues at the positions in the protein
+    pos 1 = 0
+    '''
+    if max(positions) > len(protseq) or min(positions) < 0:
+        error = 'E: requested positions outside the protein sequence\n'
+        sys.stderr.write(error)
+        return False
+    return [aa[1] for aa in enumerate(protseq) if aa[0] in positions]

@@ -171,3 +171,25 @@ def test_read_fasta_raw():
                'LLRSGKSIRTVLTF')]
 
     assert bioinfo.read_fasta_raw(indata) == (e_heads, e_seqs)
+
+
+def test_res_at_pos(capsys):
+    '''
+    Test res_at_pos()
+    '''
+    # correct
+    seq = 'ACDEFGHIKLMNPQRSTVWY'
+    pos = (0, 4, 8, 10, 15, 19)
+    expected = ['A', 'F', 'K', 'M', 'S', 'Y']
+    assert bioinfo.res_at_pos(seq, pos) == expected
+    # incorrect position, too high
+    pos = (0, 4, 8, 10, 15, 25)
+    assert bioinfo.res_at_pos(seq, pos) is False
+    err = capsys.readouterr()[1]
+    e_err = 'E: requested positions outside the protein sequence\n'
+    assert err == e_err
+    # incorrect position, too low
+    pos = (-1, 4, 8, 10, 15, 19)
+    assert bioinfo.res_at_pos(seq, pos) is False
+    err = capsys.readouterr()[1]
+    assert err == e_err
