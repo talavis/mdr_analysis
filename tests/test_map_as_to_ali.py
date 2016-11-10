@@ -138,9 +138,9 @@ def test_map_pos(capsys):
     assert err == 'E: position 10 not found in ----ACFER----FR\n'
 
 
-def test_map_struct(capsys):
+def test_map_sequences(capsys):
     '''
-    Test map_struct()
+    Test map_sequences()
     '''
     struct_seq = ('MHHHHHHSSGVDLGTENLYFQSMMQKLVVTRLSPNFREAV' +
                   'TLSRDCPVPLPGDGDLLVRNRFVGVNASDINYSAGRYDPS' +
@@ -170,11 +170,11 @@ def test_map_struct(capsys):
 
     # correct mapping
     expected = [74, 80, 114, 279, 293]
-    assert maa.map_struct(struct_seq, prot_seq, positions, residues) == expected
+    assert maa.map_sequences(struct_seq, prot_seq, positions, residues) == expected
 
     # incorrect residue
     residues = ['N', 'Y', 'A', 'G', 'L']
-    assert maa.map_struct(struct_seq, prot_seq, positions, residues) is False
+    assert maa.map_sequences(struct_seq, prot_seq, positions, residues) is False
     err = capsys.readouterr()[1]
     assert err == ('E: the protein structure does not match the position data; ' +
                    'Position 106 should be A, but is Y\n')
@@ -182,7 +182,7 @@ def test_map_struct(capsys):
     # incorrect mapping
     residues = ['H', 'Y', 'Y', 'G', 'L']
     positions = [3, 66, 72, 106, 271, 285]
-    assert maa.map_struct(struct_seq, prot_seq, positions, residues) is False
+    assert maa.map_sequences(struct_seq, prot_seq, positions, residues) is False
     err = capsys.readouterr()[1]
     assert err == 'E: the structure sequence HHHHH is not found in the protein'
 

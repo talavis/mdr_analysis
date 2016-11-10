@@ -48,7 +48,7 @@ def main(map_name, refprot, struct_name, icmres_file):
     refind = find_refprot_index(refprot, heads)
     if refind is False:
         return False
-    positions = map_struct(structseq, seqs[refind], as_data[0], as_data[1])
+    positions = map_sequences(structseq, seqs[refind], as_data[0], as_data[1])
     if positions is False:
         return False
 
@@ -96,26 +96,27 @@ def map_pos(pos, sequence):
     return False
 
 
-def map_struct(struct_seq, prot_seq, positions, residues):
+def map_sequences(seq1_seq, seq2_seq, seq1_pos, seq1_res):
     '''
-    Map the positions in a structure to the protein sequence
+    Map the positions in one sequence to those in another sequence
+    Intended for structure vs protein sequence and vice versa
     pos 1 = 0
     '''
-    prot_seq = prot_seq.replace('-', '')
-    new_pos = [0] * len(positions)
-    for p in range(len(positions)):
-        ind = positions[p]-1
-        if struct_seq[ind] != residues[p]:
+    seq2_seq = seq2_seq.replace('-', '')
+    new_pos = [0] * len(seq1_pos)
+    for p in range(len(seq1_pos)):
+        ind = seq1_pos[p]-1
+        if seq1_seq[ind] != seq1_res[p]:
             error = ('E: the protein structure does not match the position data; ' +
-                     'Position {} should be {}, but is {}\n'.format(positions[p],
-                                                                    residues[p],
-                                                                    struct_seq[ind]))
+                     'Position {} should be {}, but is {}\n'.format(seq1_pos[p],
+                                                                    seq1_res[p],
+                                                                    seq1_seq[ind]))
             sys.stderr.write(error)
             return False
         try:
-            new_pos[p] = prot_seq.index(struct_seq[ind:ind+5])
+            new_pos[p] = seq2_seq.index(seq1_seq[ind:ind+5])
         except ValueError:
-            error = ('E: the structure sequence {} '.format(struct_seq[ind:ind+5]) +
+            error = ('E: the structure sequence {} '.format(seq1_seq[ind:ind+5]) +
                      'is not found in the protein')
             sys.stderr.write(error)
             return False
