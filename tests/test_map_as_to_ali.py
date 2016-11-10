@@ -24,39 +24,6 @@ def test_find_refprot_index(capsys):
     assert err == 'E: reference sequence asdf not found\n'
 
 
-def test_get_structseq(capsys):
-    '''
-    Test get_structseq
-    '''
-    e_heads = ['1U3W:A|PDBID|CHAIN|SEQUENCE',
-               '1U3W:B|PDBID|CHAIN|SEQUENCE']
-    e_seqs = [('STAGKVIKCKAAVLWELKKPFSIEEVEVAPPKAHEVRIKM' +
-               'VAAGICRSDEHVVSGNLVTPLPVILGHEAAGIVESVGEGV' +
-               'TTVKPGDKVIPLFTPQCGKCRICKNPESNYCLKNDLGNPR' +
-               'GTLQDGTRRFTCSGKPIHHFVGVSTFSQYTVVDENAVAKI' +
-               'DAASPLEKVCLIGCGFSTGYGSAVKVAKVTPGSTCAVFGL' +
-               'GGVGLSVVMGCKAAGAARIIAVDINKDKFAKAKELGATEC' +
-               'INPQDYKKPIQEVLKEMTDGGVDFSFEVIGQLDTMMASLL' +
-               'CCHEACGTSVIVGVPPDSQNLSINPMLLLTGRTWKGAIFG' +
-               'GFKSKESVPKLVADFMAKKFSLDALITNVLPFEKINEGFD' +
-               'LLRSGKSIRTVLTF'),
-              ('STAGKVIKCKAAVLWELKKPFSIEEVEVAPPKAHEVRIKM' +
-               'VAAGICRSDEHVVSGNLVTPLPVILGHEAAGIVESVGEGV' +
-               'TTVKPGDKVIPLFTPQCGKCRICKNPESNYCLKNDLGNPR' +
-               'GTLQDGTRRFTCSGKPIHHFVGVSTFSQYTVVDENAVAKI' +
-               'DAASPLEKVCLIGCGFSTGYGSAVKVAKVTPGSTCAVFGL' +
-               'GGVGLSVVMGCKAAGAARIIAVDINKDKFAKAKELGATEC' +
-               'INPQDYKKPIQEVLKEMTDGGVDFSFEVIGQLDTMMASLL' +
-               'CCHEACGTSVIVGVPPDSQNLSINPMLLLTGRTWKGAIFG' +
-               'GFKSKESVPKLVADFMAKKFSLDALITNVLPFEKINEGFD' +
-               'LLRSGKSIRTVLTF')]
-
-    assert maa.get_structseq('1u3w') == (e_heads, e_seqs)
-    assert maa.get_structseq('abcde') is False
-    out, err = capsys.readouterr()
-    assert err == 'E: could not retrieve sequence for structure abcde\n'
-
-
 def test_main(capsys):
     '''
     Test main()

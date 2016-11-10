@@ -5,7 +5,6 @@ Use the output of Res(site_def) from ICM
 '''
 
 import sys
-import requests
 
 import bioinfo
 
@@ -25,22 +24,6 @@ def find_refprot_index(refprot, headers):
     return refind
 
 
-def get_structseq(pdb):
-    '''
-    Obtain the sequence of the protein structure from RCSB PDB
-    '''
-    url = 'http://www.rcsb.org/pdb/files/fasta.txt?structureIdList={}'.format(pdb)
-    req = requests.get(url)
-    raw = req.text
-    if len(raw) == 0:
-        error = 'E: could not retrieve sequence for structure {}\n'.format(pdb)
-        sys.stderr.write(error)
-        return False
-    heads, seqs = bioinfo.read_fasta_raw(raw)
-
-    return (heads, seqs)
-
-
 def main(map_name, refprot, struct_name, icmres_file):
     '''
     Map active site data to an alignment
@@ -54,7 +37,7 @@ def main(map_name, refprot, struct_name, icmres_file):
         # data map
         heads, seqs, data = read_map_raw(inmap)
 
-    structseq = get_structseq(struct_name)
+    structseq = bioinfo.get_structseq(struct_name)
     if structseq is False:
         return False
     structseq = structseq[1][0]

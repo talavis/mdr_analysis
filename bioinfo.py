@@ -4,6 +4,7 @@ Some commonly used bioinformatics funtions
 '''
 
 import sys
+import requests
 
 
 def beautify_fasta(sequence, per_line=60):
@@ -33,6 +34,22 @@ def get_species(header):
     sys.stderr.write('E: Unable to identify species({})'.format(header))
 
     return 'Unknown'
+
+
+def get_structseq(pdb):
+    '''
+    Obtain the sequence of the protein structure from RCSB PDB
+    '''
+    url = 'http://www.rcsb.org/pdb/files/fasta.txt?structureIdList={}'.format(pdb)
+    req = requests.get(url)
+    raw = req.text
+    if len(raw) == 0:
+        error = 'E: could not retrieve sequence for structure {}\n'.format(pdb)
+        sys.stderr.write(error)
+        return False
+    heads, seqs = read_fasta_raw(raw)
+
+    return (heads, seqs)
 
 
 def read_fasta(filename):

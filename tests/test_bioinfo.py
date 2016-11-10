@@ -35,6 +35,39 @@ def test_get_species():
     assert bioinfo.get_species(ensembl_head) == 'Unknown'
 
 
+def test_get_structseq(capsys):
+    '''
+    Test get_structseq
+    '''
+    e_heads = ['1U3W:A|PDBID|CHAIN|SEQUENCE',
+               '1U3W:B|PDBID|CHAIN|SEQUENCE']
+    e_seqs = [('STAGKVIKCKAAVLWELKKPFSIEEVEVAPPKAHEVRIKM' +
+               'VAAGICRSDEHVVSGNLVTPLPVILGHEAAGIVESVGEGV' +
+               'TTVKPGDKVIPLFTPQCGKCRICKNPESNYCLKNDLGNPR' +
+               'GTLQDGTRRFTCSGKPIHHFVGVSTFSQYTVVDENAVAKI' +
+               'DAASPLEKVCLIGCGFSTGYGSAVKVAKVTPGSTCAVFGL' +
+               'GGVGLSVVMGCKAAGAARIIAVDINKDKFAKAKELGATEC' +
+               'INPQDYKKPIQEVLKEMTDGGVDFSFEVIGQLDTMMASLL' +
+               'CCHEACGTSVIVGVPPDSQNLSINPMLLLTGRTWKGAIFG' +
+               'GFKSKESVPKLVADFMAKKFSLDALITNVLPFEKINEGFD' +
+               'LLRSGKSIRTVLTF'),
+              ('STAGKVIKCKAAVLWELKKPFSIEEVEVAPPKAHEVRIKM' +
+               'VAAGICRSDEHVVSGNLVTPLPVILGHEAAGIVESVGEGV' +
+               'TTVKPGDKVIPLFTPQCGKCRICKNPESNYCLKNDLGNPR' +
+               'GTLQDGTRRFTCSGKPIHHFVGVSTFSQYTVVDENAVAKI' +
+               'DAASPLEKVCLIGCGFSTGYGSAVKVAKVTPGSTCAVFGL' +
+               'GGVGLSVVMGCKAAGAARIIAVDINKDKFAKAKELGATEC' +
+               'INPQDYKKPIQEVLKEMTDGGVDFSFEVIGQLDTMMASLL' +
+               'CCHEACGTSVIVGVPPDSQNLSINPMLLLTGRTWKGAIFG' +
+               'GFKSKESVPKLVADFMAKKFSLDALITNVLPFEKINEGFD' +
+               'LLRSGKSIRTVLTF')]
+
+    assert bioinfo.get_structseq('1u3w') == (e_heads, e_seqs)
+    assert bioinfo.get_structseq('abcde') is False
+    err = capsys.readouterr()[1]
+    assert err == 'E: could not retrieve sequence for structure abcde\n'
+
+
 def test_read_fasta():
     '''
     Test read_fasta() by reading a badly formatted FASTA file
