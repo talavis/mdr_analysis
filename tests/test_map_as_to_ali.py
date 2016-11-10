@@ -77,12 +77,15 @@ def test_main(capsys):
 
     # incorrect structure
     assert maa.main(map_name, 'prot1', 'asdfg', asdata_name) is False
+    capsys.readouterr()
 
     # incorrect reference
     assert maa.main(map_name, '1torp', '1u3w', asdata_name) is False
+    capsys.readouterr()
 
     # incorrect icmfile
     assert maa.main(map_name, 'prot1', '1u3w', '______.txt') is False
+    capsys.readouterr()
 
     # incorrect positions
     inasdata = ('- Num  Res. Type ---- SS Molecule ---- Object - sf - sfRatio\n' +
@@ -165,7 +168,7 @@ def test_map_sequences(capsys):
                 'QGFFLNHYLSKYQAAMSHLLEMCVSGDLVC' +
                 'EVDLGDLSPEGRFTGLESIFRAVNYMYMGK' +
                 'NTGKIVVELPHSVNSKL')
-    positions = [66, 72, 106, 271, 285]
+    positions = [65, 71, 105, 270, 284]
     residues = ['N', 'Y', 'Y', 'G', 'L']
 
     # correct mapping
@@ -181,10 +184,10 @@ def test_map_sequences(capsys):
 
     # incorrect mapping
     residues = ['H', 'Y', 'Y', 'G', 'L']
-    positions = [3, 66, 72, 106, 271, 285]
+    positions = [2, 65, 71, 105, 270, 284]
     assert maa.map_sequences(struct_seq, prot_seq, positions, residues) is False
     err = capsys.readouterr()[1]
-    assert err == 'E: the structure sequence HHHHH is not found in the protein'
+    assert err == 'E: the sequence HHHHH is not found in the second protein'
 
 
 def test_read_icmdata(capsys):
@@ -206,7 +209,7 @@ def test_read_icmdata(capsys):
 
     positions = [66, 72, 106, 271, 285]
     residues = ['N', 'Y', 'Y', 'G', 'L']
-    expected = (positions, residues)
+    expected = [positions, residues]
     assert maa.read_icmdata(filename) == expected
 
     # without header

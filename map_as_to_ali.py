@@ -45,6 +45,10 @@ def main(map_name, refprot, struct_name, icmres_file):
     as_data = read_icmdata(icmres_file)
     if as_data is False:
         return False
+    # shift -1 on positions
+    as_data[0] = [pos-1 for pos in as_data[0]]
+    if as_data is False:
+        return False
     refind = find_refprot_index(refprot, heads)
     if refind is False:
         return False
@@ -105,10 +109,10 @@ def map_sequences(seq1_seq, seq2_seq, seq1_pos, seq1_res):
     seq2_seq = seq2_seq.replace('-', '')
     new_pos = [0] * len(seq1_pos)
     for p in range(len(seq1_pos)):
-        ind = seq1_pos[p]-1
+        ind = seq1_pos[p]
         if seq1_seq[ind] != seq1_res[p]:
             error = ('E: the protein sequence does not match the position data; ' +
-                     'Position {} should be {}, but is {}\n'.format(seq1_pos[p],
+                     'Position {} should be {}, but is {}\n'.format(seq1_pos[p]+1,
                                                                     seq1_res[p],
                                                                     seq1_seq[ind]))
             sys.stderr.write(error)
@@ -116,8 +120,8 @@ def map_sequences(seq1_seq, seq2_seq, seq1_pos, seq1_res):
         try:
             new_pos[p] = seq2_seq.index(seq1_seq[ind:ind+5])
         except ValueError:
-            error = ('E: the structure sequence {} '.format(seq1_seq[ind:ind+5]) +
-                     'is not found in the protein')
+            error = ('E: the sequence {} '.format(seq1_seq[ind:ind+5]) +
+                     'is not found in the second protein')
             sys.stderr.write(error)
             return False
     return new_pos
@@ -151,7 +155,7 @@ def read_icmdata(filename):
         error = 'E: unable to parse positions in file {}\n'.format(filename)
         sys.stderr.write(error)
         return False
-    return (positions, residues)
+    return [positions, residues]
 
 
 def read_map_raw(indata):
