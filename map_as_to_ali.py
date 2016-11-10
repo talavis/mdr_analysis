@@ -107,7 +107,7 @@ def map_sequences(seq1_seq, seq2_seq, seq1_pos, seq1_res):
     for p in range(len(seq1_pos)):
         ind = seq1_pos[p]-1
         if seq1_seq[ind] != seq1_res[p]:
-            error = ('E: the protein structure does not match the position data; ' +
+            error = ('E: the protein sequence does not match the position data; ' +
                      'Position {} should be {}, but is {}\n'.format(seq1_pos[p],
                                                                     seq1_res[p],
                                                                     seq1_seq[ind]))
