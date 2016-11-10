@@ -99,6 +99,7 @@ def map_pos(pos, sequence):
 def map_struct(struct_seq, prot_seq, positions, residues):
     '''
     Map the positions in a structure to the protein sequence
+    pos 1 = 0
     '''
     prot_seq = prot_seq.replace('-', '')
     new_pos = [0] * len(positions)
