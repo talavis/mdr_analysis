@@ -20,7 +20,7 @@ def test_find_refprot_index(capsys):
     assert maa.find_refprot_index(refprot, heads) == 2
     # failure
     assert maa.find_refprot_index('asdf', heads) is False
-    out, err = capsys.readouterr()
+    err = capsys.readouterr()[1]
     assert err == 'E: reference sequence asdf not found\n'
 
 
@@ -49,7 +49,7 @@ def test_main(capsys):
         tmpf.write(inseq)
 
     maa.main(fasta_name, 'prot1', '1u3w', asdata_name)
-    out, err = capsys.readouterr()
+    out = capsys.readouterr()[0]
     assert out == ('ali:prot1\tS\tT\tA\t-\tG\tK\tV\tI\tK\tC\tK\tA\tA\tV\tL\tW\n' +
                    'ali:prot2\tS\tT\tA\tA\tG\tK\t-\tI\tK\tC\tK\tA\tA\tV\t-\tW\n' +
                    'ali:prot3\tS\t-\tA\tT\tG\tK\tL\tI\tK\tC\tK\tA\tA\tV\tL\t-\n' +
@@ -67,7 +67,7 @@ def test_main(capsys):
         tmpf.write(inmap)
 
     maa.main(map_name, 'prot1', '1u3w', asdata_name)
-    out, err = capsys.readouterr()
+    out = capsys.readouterr()[0]
     assert out == ('ali:prot1\tS\tT\tA\t-\tG\tK\tV\tI\tK\tC\tK\tA\tA\tV\tL\tW\n' +
                    'ali:prot2\tS\tT\tA\tA\tG\tK\t-\tI\tK\tC\tK\tA\tA\tV\t-\tW\n' +
                    'ali:prot3\tS\t-\tA\tT\tG\tK\tL\tI\tK\tC\tK\tA\tA\tV\tL\t-\n' +
@@ -134,7 +134,7 @@ def test_map_pos(capsys):
     assert maa.map_pos(pos, seq) == 4
     pos = 10
     assert maa.map_pos(pos, seq) is False
-    out, err = capsys.readouterr()
+    err = capsys.readouterr()[1]
     assert err == 'E: position 10 not found in ----ACFER----FR\n'
 
 
@@ -175,7 +175,7 @@ def test_map_struct(capsys):
     # incorrect residue
     residues = ['N', 'Y', 'A', 'G', 'L']
     assert maa.map_struct(struct_seq, prot_seq, positions, residues) is False
-    out, err = capsys.readouterr()
+    err = capsys.readouterr()[1]
     assert err == ('E: the protein structure does not match the position data; ' +
                    'Position 106 should be A, but is Y\n')
 
@@ -183,9 +183,9 @@ def test_map_struct(capsys):
     residues = ['H', 'Y', 'Y', 'G', 'L']
     positions = [3, 66, 72, 106, 271, 285]
     assert maa.map_struct(struct_seq, prot_seq, positions, residues) is False
-    out, err = capsys.readouterr()
+    err = capsys.readouterr()[1]
     assert err == 'E: the structure sequence HHHHH is not found in the protein'
-    
+
 
 def test_read_icmdata(capsys):
     '''
@@ -222,7 +222,7 @@ def test_read_icmdata(capsys):
 
     # file not existing
     assert maa.read_icmdata('______.txt') is False
-    out, err = capsys.readouterr()
+    err = capsys.readouterr()[1]
     assert err == 'E: file ______.txt not found\n'
 
     # incorrect formatting in file
@@ -237,7 +237,7 @@ def test_read_icmdata(capsys):
         tmpf.write(indata)
 
     assert maa.read_icmdata(filename) is False
-    out, err = capsys.readouterr()
+    err = capsys.readouterr()[1]
     assert err == 'E: unable to parse positions in file {}\n'.format(filename)
 
 
