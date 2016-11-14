@@ -14,7 +14,8 @@ import map_as_to_ali as maa
 
 def main(protfile, structname, posfile):
     '''
-    Generate the commands needed for visualisation of data on a structure in ICM
+    Generate the commands needed for visualisation of data
+    on a structure in ICM
     pos 1 = 1
     '''
     protseq = bioinfo.read_fasta(protfile)[1][0]
@@ -23,7 +24,9 @@ def main(protfile, structname, posfile):
     structseq = bioinfo.get_structseq(structname)[1][0]
     if structseq is False:
         return False
-    prot_pos = [int(num)-1 for num in open(posfile).read().split('\n') if len(num) > 0]
+    prot_pos = [int(num)-1 for num in
+                open(posfile).read().split('\n')
+                if len(num) > 0]
     prot_res = bioinfo.res_at_pos(protseq, prot_pos)
 
     struct_pos = maa.map_sequences(protseq, structseq, prot_pos, prot_res)
@@ -35,38 +38,39 @@ def main(protfile, structname, posfile):
 
     # read and convert the structure
     print('read pdb "{}"'.format(structname))
-    print('convertObject a_{}. 1==1 no yes yes yes yes yes' +
+    print('convertObject a_{}.'.format(structname) +
+          '1==1 no yes yes yes yes yes' +
           '""+( 1==2 ? "water=tight ":"" )')
 
     # make group of residues:
-    icm_res = [make_icm_res(dat[0], dat[1], structname)
+    icm_res = [make_icm_res(dat[0], dat[1])
                for dat in zip(struct_res, struct_pos)]
-    command = 'cons = {' + ' '.join(icm_res) + '}'
+    command = 'cons = a_{}./{}'.format(structname,
+                                       ','.join(icm_res))
     print(command)
 
     # reset color to green
     print('color a_{}. green'.format(structname))
 
     # color all relevant residues
-    print('color cons red'.format(structname))
-    
-def make_icm_res(res, pos, structname):
+    print('color cons red')
+
+
+def make_icm_res(res, pos):
     '''
     Return the formating for the residue in ICM
     pos 1 = 0
     '''
-    return 'a_{}./^{}{}'.format(structname,
-                                res,
-                                pos+1)
+    return '^{}{}'.format(res, pos+1)
 
 
 if __name__ == '__main__':
     if len(sys.argv) != 4:
-        usage = 'Usage: {} <{}> <{}> <{}>\n'.format(sys.argv[0],
+        USAGE = 'Usage: {} <{}> <{}> <{}>\n'.format(sys.argv[0],
                                                     'Protein sequence file',
                                                     'PDB structure name',
                                                     'List of positions file')
-        sys.stderr.write(usage)
+        sys.stderr.write(USAGE)
         sys.exit(1)
     if main(sys.argv[1], sys.argv[2], sys.argv[3]) is False:
         sys.exit(1)

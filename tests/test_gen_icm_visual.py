@@ -24,18 +24,19 @@ def test_main(capsys):
     with open(pos_name, 'w') as tmpf:
         tmpf.write(inpos)
 
-    expected = ('cons = {' +
-                'a_1u3w./^S1 ' +
-                'a_1u3w./^A3 ' +
-                'a_1u3w./^V6' +
-                '}\n')
+    expected = ('read pdb "1u3w"\n'
+                'convertObject a_1u3w.1==1 no yes yes yes yes yes' +
+                '""+( 1==2 ? "water=tight ":"" )\n' +
+                'cons = a_1u3w./^S1,^A3,^V6\n' +
+                'color a_1u3w. green\n' +
+                'color cons red\n')
     giv.main(fasta_name, '1u3w', pos_name)
     out = capsys.readouterr()[0]
     assert out == expected
-    
+
 
 def test_make_icm_res():
     '''
     Test make_icm_res()
     '''
-    assert giv.make_icm_res('A', 3, '1u3w') == 'a_1u3w./^A4'
+    assert giv.make_icm_res('A', 3) == '^A4'
