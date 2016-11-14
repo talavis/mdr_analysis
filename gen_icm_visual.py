@@ -33,12 +33,22 @@ def main(protfile, structname, posfile):
     if struct_res is False:
         return False
 
+    # read and convert the structure
+    print('read pdb "{}"'.format(structname))
+    print('convertObject a_{}. 1==1 no yes yes yes yes yes' +
+          '""+( 1==2 ? "water=tight ":"" )')
+
     # make group of residues:
     icm_res = [make_icm_res(dat[0], dat[1], structname)
                for dat in zip(struct_res, struct_pos)]
     command = 'cons = {' + ' '.join(icm_res) + '}'
     print(command)
 
+    # reset color to green
+    print('color a_{}. green'.format(structname))
+
+    # color all relevant residues
+    print('color cons red'.format(structname))
     
 def make_icm_res(res, pos, structname):
     '''
