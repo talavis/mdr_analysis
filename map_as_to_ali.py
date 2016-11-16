@@ -110,6 +110,10 @@ def map_sequences(seq1_seq, seq2_seq, seq1_pos, seq1_res):
     new_pos = [0] * len(seq1_pos)
     for p in range(len(seq1_pos)):
         ind = seq1_pos[p]
+        if ind >= len(seq1_seq):
+            error = 'E: position outside protein ({})\n'.format(ind)
+            sys.stderr.write(error)
+            return False
         if seq1_seq[ind] != seq1_res[p]:
             error = ('E: the protein sequence does not match the position data; ' +
                      'Position {} should be {}, but is {}\n'.format(seq1_pos[p]+1,
