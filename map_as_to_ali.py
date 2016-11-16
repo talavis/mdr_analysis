@@ -121,7 +121,7 @@ def map_sequences(seq1_seq, seq2_seq, seq1_pos, seq1_res):
             new_pos[p] = seq2_seq.index(seq1_seq[ind:ind+5])
         except ValueError:
             error = ('E: the sequence {} '.format(seq1_seq[ind:ind+5]) +
-                     'is not found in the second protein')
+                     'is not found in the second protein\n')
             sys.stderr.write(error)
             return False
     return new_pos
