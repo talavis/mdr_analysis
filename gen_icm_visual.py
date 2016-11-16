@@ -18,12 +18,16 @@ def main(protfile, structname, posfile):
     on a structure in ICM
     pos 1 = 1
     '''
-    protseq = bioinfo.read_fasta(protfile)[1][0]
-    if protseq is False:
+    protseq = bioinfo.read_fasta(protfile)
+    if protseq is False or len(protseq) == 0:
         return False
-    structseq = bioinfo.get_structseq(structname)[1][0]
+    protseq = protseq[1][0]
+
+    structseq = bioinfo.get_structseq(structname)
     if structseq is False:
         return False
+    structseq = structseq[1][0]
+
     prot_pos = [int(num)-1 for num in
                 open(posfile).read().split('\n')
                 if len(num) > 0]
@@ -38,8 +42,8 @@ def main(protfile, structname, posfile):
 
     # read and convert the structure
     print('read pdb "{}"'.format(structname))
-    print('convertObject a_{}.'.format(structname) +
-          '1==1 no yes yes yes yes yes' +
+    print('convertObject a_{}. '.format(structname) +
+          '1==1 no yes yes yes yes yes ' +
           '""+( 1==2 ? "water=tight ":"" )')
 
     # make group of residues:
@@ -54,6 +58,9 @@ def main(protfile, structname, posfile):
 
     # color all relevant residues
     print('color cons red')
+
+    # activate graphical representation
+    print('cool a_{}.'.format(structname))
 
 
 def make_icm_res(res, pos):
