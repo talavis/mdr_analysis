@@ -57,16 +57,20 @@ def read_fasta(filename):
     Read a FASTA file.
     Return the headers and sequences as lists
     '''
-    with open(filename) as infile:
-        seqs = list()
-        headers = list()
-        for line in infile:
-            if line[0] == '>':
-                headers.append(line[1:].strip())
-                seqs.append('')
-            elif len(line.strip()) > 0:
-                seqs[-1] += line.strip()
-
+    try:
+        with open(filename) as infile:
+            seqs = list()
+            headers = list()
+            for line in infile:
+                if line[0] == '>':
+                    headers.append(line[1:].strip())
+                    seqs.append('')
+                elif len(line.strip()) > 0:
+                    seqs[-1] += line.strip()
+    except FileNotFoundError:
+        error = 'E: Cannot find FASTA file: {}\n'.format(filename)
+        sys.stderr.write(error)
+        return False
     return (headers, seqs)
 
 

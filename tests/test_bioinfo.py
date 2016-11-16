@@ -68,7 +68,7 @@ def test_get_structseq(capsys):
     assert err == 'E: could not retrieve sequence for structure abcde\n'
 
 
-def test_read_fasta():
+def test_read_fasta(capsys):
     '''
     Test read_fasta() by reading a badly formatted FASTA file
     '''
@@ -119,6 +119,11 @@ def test_read_fasta():
         tmpf.write(indata)
 
     assert bioinfo.read_fasta(filename) == (realhead, realseq)
+
+    # incorrect file name
+    assert bioinfo.read_fasta('__incorrect') is False
+    err = capsys.readouterr()[1]
+    assert err == 'E: Cannot find FASTA file: __incorrect\n'
 
 
 def test_read_fasta_raw():
