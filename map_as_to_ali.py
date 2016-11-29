@@ -100,31 +100,31 @@ def map_pos(pos, sequence):
     return False
 
 
-def map_sequences(seq1_seq, seq2_seq, seq1_pos, seq1_res):
+def map_sequences(query_seq, ref_seq, query_pos, query_res):
     '''
     Map the positions in one sequence to those in another sequence
     Intended for structure vs protein sequence and vice versa
     pos 1 = 0
     '''
-    seq2_seq = seq2_seq.replace('-', '')
-    new_pos = [0] * len(seq1_pos)
-    for p in range(len(seq1_pos)):
-        ind = seq1_pos[p]
-        if ind >= len(seq1_seq):
+    ref_seq = ref_seq.replace('-', '')
+    new_pos = [0] * len(query_pos)
+    for p in range(len(query_pos)):
+        ind = query_pos[p]
+        if ind >= len(query_seq):
             error = 'E: position outside protein ({})\n'.format(ind)
             sys.stderr.write(error)
             return False
-        if seq1_seq[ind] != seq1_res[p]:
+        if query_seq[ind] != query_res[p]:
             error = ('E: the protein sequence does not match the position data; ' +
-                     'Position {} should be {}, but is {}\n'.format(seq1_pos[p]+1,
-                                                                    seq1_res[p],
-                                                                    seq1_seq[ind]))
+                     'Position {} should be {}, but is {}\n'.format(query_pos[p]+1,
+                                                                    query_res[p],
+                                                                    query_seq[ind]))
             sys.stderr.write(error)
             return False
         try:
-            new_pos[p] = seq2_seq.index(seq1_seq[ind:ind+5])
+            new_pos[p] = ref_seq.index(query_seq[ind:ind+5])
         except ValueError:
-            error = ('E: the sequence {} '.format(seq1_seq[ind:ind+5]) +
+            error = ('E: the sequence {} '.format(query_seq[ind:ind+5]) +
                      'is not found in the second protein\n')
             sys.stderr.write(error)
             return False
