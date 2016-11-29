@@ -168,14 +168,16 @@ def test_map_sequences(capsys):
                 'QGFFLNHYLSKYQAAMSHLLEMCVSGDLVC' +
                 'EVDLGDLSPEGRFTGLESIFRAVNYMYMGK' +
                 'NTGKIVVELPHSVNSKL')
-    positions = [65, 71, 105, 270, 284]
-    residues = ['N', 'Y', 'Y', 'G', 'L']
+    positions = [65, 71, 88, 105, 270, 284]
+    residues = ['N', 'Y', 'F', 'Y', 'G', 'L']
 
     # correct mapping
-    expected = [74, 80, 114, 279, 293]
+    expected = [74, 80, 97, 114, 279, 293]
     assert maa.map_sequences(struct_seq, prot_seq, positions, residues) == expected
+    capsys.readouterr()
 
     # incorrect residue
+    positions = [65, 71, 105, 270, 284]
     residues = ['N', 'Y', 'A', 'G', 'L']
     assert maa.map_sequences(struct_seq, prot_seq, positions, residues) is False
     err = capsys.readouterr()[1]
