@@ -122,9 +122,9 @@ def map_sequences(query_seq, ref_seq, query_pos, query_res):
             sys.stderr.write(error)
             return False
         try:
-            new_pos[p] = ref_seq.index(query_seq[ind:ind+5])
+            new_pos[p] = ref_seq.index(query_seq[ind:ind+6])
         except ValueError:
-            error = ('E: the sequence {} '.format(query_seq[ind:ind+5]) +
+            error = ('E: the sequence {} '.format(query_seq[ind:ind+6]) +
                      'is not found in the second protein\n')
             sys.stderr.write(error)
             return False

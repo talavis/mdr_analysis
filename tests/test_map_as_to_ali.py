@@ -189,7 +189,7 @@ def test_map_sequences(capsys):
     positions = [2, 65, 71, 105, 270, 284]
     assert maa.map_sequences(struct_seq, prot_seq, positions, residues) is False
     err = capsys.readouterr()[1]
-    assert err == 'E: the sequence HHHHH is not found in the second protein\n'
+    assert err == 'E: the sequence HHHHHS is not found in the second protein\n'
 
     # position outside protein
     residues = ['N', 'Y', 'Y', 'G', 'L']
