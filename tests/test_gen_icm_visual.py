@@ -69,7 +69,7 @@ def test_main(capsys):
         tmpf.write(inseq)
     assert giv.main(fasta_name, '4ins', pos_name) is False
     err = capsys.readouterr()[1]
-    expected = 'E: the sequence STAGK is not found in the second protein\n'
+    expected = 'E: the sequence STAGKV is not found in the second protein\n'
     assert err == expected
 
     # incorrect positions
