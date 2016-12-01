@@ -31,11 +31,12 @@ def main(prot_file, structcode, icmvis_file, icmpos_file):
 
     conspos, consres = read_vis(icmvis_file)
     if conspos is False:
-        return False    
+        return False
 
-    icmpos, icmres = maa.read_icmdata(icmpos_file)
+    icmpos = maa.read_icmdata(icmpos_file)
     if icmpos is False:
         return False
+    icmpos = icmpos[0]
 
     data = [p for p in zip(conspos, consres) if p[0] in icmpos]
     # pos1 == 0
@@ -68,12 +69,12 @@ def read_vis(visfile):
 
 if __name__ == '__main__':
     if len(sys.argv) != 5:
-        usage = ('Usage: {} '.format(sys.argv[0]) +
+        USAGE = ('Usage: {} '.format(sys.argv[0]) +
                  '<protein sequence> ' +
                  '<structure code> ' +
                  '<ICM visualisation> ' +
                  '<ICM active site positions>\n')
-        sys.stder.write(usage)
+        sys.stderr.write(USAGE)
         sys.exit(1)
 
     if main(*sys.argv[1:]) is False:
