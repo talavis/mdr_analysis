@@ -69,7 +69,7 @@ def test_main(capsys):
                   'color a_2c0c. green\n' +
                   'color cons red\n' +
                   'color cool a_2c0c.\n')
-    
+
     icmvis_name = tempfile.mkstemp()[1]
     with open(icmvis_name, 'w') as tmpf:
         tmpf.write(icmvisdata)
@@ -90,14 +90,14 @@ def test_read_vis():
     import tempfile
 
     indata = ('read pdb "2c0c"\n' +
-                  'convertObject a_2c0c. 1==1 no yes yes yes yes yes ' +
-                  '""+( 1==2 ? "water=tight ":"" )\n' +
-                  'cons = a_2c0c./^N35,^R37,^E38,^A39,^V40,^L42,^C46,^V48,' +
-                  '^D55,^L56,^L57,^R59,^N60,^R61,^G64,^I70,^S80,^F89,^G93\n' +
-                  'color a_2c0c. green\n' +
-                  'color cons red\n' +
-                  'color cool a_2c0c.\n')
-    
+              'convertObject a_2c0c. 1==1 no yes yes yes yes yes ' +
+              '""+( 1==2 ? "water=tight ":"" )\n' +
+              'cons = a_2c0c./^N35,^R37,^E38,^A39,^V40,^L42,^C46,^V48,' +
+              '^D55,^L56,^L57,^R59,^N60,^R61,^G64,^I70,^S80,^F89,^G93\n' +
+              'color a_2c0c. green\n' +
+              'color cons red\n' +
+              'color cool a_2c0c.\n')
+
     data_name = tempfile.mkstemp()[1]
     with open(data_name, 'w') as tmpf:
         tmpf.write(indata)
@@ -107,4 +107,3 @@ def test_read_vis():
     res = ['N', 'R', 'E', 'A', 'V', 'L', 'C', 'V', 'D', 'L',
            'L', 'R', 'N', 'R', 'G', 'I', 'S', 'F', 'G']
     assert mica.read_vis(data_name) == (pos, res)
-
