@@ -29,9 +29,11 @@ def main(prot_file, structcode, icmvis_file, icmpos_file):
         return False
     structseq = structseq[1][0]
 
-    conspos, consres = read_vis(icmvis_file)
-    if conspos is False:
+    cons = read_vis(icmvis_file)
+    if cons is False or len(cons[0]) == 0:
         return False
+    conspos = cons[0]
+    consres = cons[1]
 
     icmpos = maa.read_icmdata(icmpos_file)
     if icmpos is False:
@@ -59,7 +61,13 @@ def read_vis(visfile):
     '''
     with open(visfile) as infile:
         raw = infile.read()
-    line = [line for line in raw.split('\n') if line[:4] == 'cons'][0]
+    try:
+        line = [line for line in raw.split('\n') if line[:4] == 'cons'][0]
+    except IndexError:
+        err = ('E: Incorrect formatting ' +
+               'in ICM command file ({})\n'.format(visfile))
+        sys.stderr.write(err)
+        return False
     rawpos = [pos.replace(',', '') for pos in line.split('^')[1:]]
 
     pos = [int(p[1:]) for p in rawpos]

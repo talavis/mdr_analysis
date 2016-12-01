@@ -76,14 +76,62 @@ def test_main(capsys):
 
     mica.main(prot_name, '2c0c', icmvis_name, asdata_name)
     out, err = capsys.readouterr()
-    print(out, err)
     assert out == ('97\tF\n' +
                    '114\tY\n' +
                    '138\tI\n' +
                    '303\tF\n')
+    assert err == ''
+
+    # incorrect protein file name
+    assert mica.main('__incorect_name__', '2c0c', icmvis_name, asdata_name) is False
+    err = capsys.readouterr()[1]
+    assert err == 'E: Cannot find FASTA file: __incorect_name__\n'
+
+    # bad structure name
+    assert mica.main(prot_name, '_1asd2c0c', icmvis_name, asdata_name) is False
+    err = capsys.readouterr()[1]
+    assert err == 'E: could not retrieve sequence for structure _1asd2c0c\n'
+
+    # bad icm visualisation file
+    incorrect = ('- Num  Res. Type ---- SS Molecule ---- Object - sf - sfRatio\n' +
+                 'XYZ\n')
+    incvis_name = tempfile.mkstemp()[1]
+    with open(incvis_name, 'w') as tmpf:
+        tmpf.write(incorrect)
+    assert mica.main(prot_name, '2c0c', incvis_name, asdata_name) is False
+    err = capsys.readouterr()[1]
+    assert err == 'E: Incorrect formatting in ICM command file ({})\n'.format(incvis_name)
+
+    # bad icm active site data
+    incorrect = ('- Num  Res. Type ---- SS Molecule ---- Object - sf - sfRatio\n' +
+                 'XYZ\n')
+    incas_name = tempfile.mkstemp()[1]
+    with open(incas_name, 'w') as tmpf:
+        tmpf.write(incorrect)
+    assert mica.main(prot_name, '2c0c', icmvis_name, incas_name) is False
+    err = capsys.readouterr()[1]
+    assert err == 'E: unable to parse positions in file {}\n'.format(incas_name)
+
+    # bad mapping
+    badposdata = ('read pdb "2c0c"\n' +
+                  'convertObject a_2c0c. 1==1 no yes yes yes yes yes ' +
+                  '""+( 1==2 ? "water=tight ":"" )\n' +
+                  'cons = a_2c0c./^N35,^R37,^E38,^A39,^V40,^L42,^C46,^V48,' +
+                  '^D55,^L56,^L57,^R59,^N60,^R61,^G64,^I70,^S80,^S89,^G93\n' +
+                  'color a_2c0c. green\n' +
+                  'color cons red\n' +
+                  'color cool a_2c0c.\n')
+
+    badpos_name = tempfile.mkstemp()[1]
+    with open(badpos_name, 'w') as tmpf:
+        tmpf.write(badposdata)
+    assert mica.main(prot_name, '2c0c', badpos_name, asdata_name) is False
+    err = capsys.readouterr()[1]
+    assert err == ('E: the protein sequence does not match the ' +
+                   'position data; Position 89 should be S, but is F\n')
 
 
-def test_read_vis():
+def test_read_vis(capsys):
     '''
     Test read_vis()
     '''
@@ -107,3 +155,29 @@ def test_read_vis():
     res = ['N', 'R', 'E', 'A', 'V', 'L', 'C', 'V', 'D', 'L',
            'L', 'R', 'N', 'R', 'G', 'I', 'S', 'F', 'G']
     assert mica.read_vis(data_name) == (pos, res)
+
+    # no data in visualisation file
+    incorrect = ('read pdb "2c0c"\n' +
+                 'convertObject a_2c0c. 1==1 no yes yes yes yes yes ' +
+                 '""+( 1==2 ? "water=tight ":"" )\n' +
+                 'cons = a_2c0c./' +
+                 'color a_2c0c. green\n' +
+                 'color cons red\n' +
+                 'color cool a_2c0c.\n')
+    inc_name = tempfile.mkstemp()[1]
+    with open(inc_name, 'w') as tmpf:
+        tmpf.write(incorrect)
+
+    assert mica.read_vis(inc_name) is False
+    err = capsys.readouterr()[1]
+    assert err == 'E: No positions in ICM command file ({})\n'.format(inc_name)
+
+    # bad formatting in file
+    incorrect = ('- Num  Res. Type ---- SS Molecule ---- Object - sf - sfRatio\n' +
+                 'XYZ\n')
+    incvis_name = tempfile.mkstemp()[1]
+    with open(incvis_name, 'w') as tmpf:
+        tmpf.write(incorrect)
+    assert mica.read_vis(incvis_name) is False
+    err = capsys.readouterr()[1]
+    assert err == 'E: Incorrect formatting in ICM command file ({})\n'.format(incvis_name)
