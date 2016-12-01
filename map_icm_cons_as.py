@@ -64,6 +64,10 @@ def read_vis(visfile):
 
     pos = [int(p[1:]) for p in rawpos]
     res = [p[0] for p in rawpos]
+    if len(pos) == 0:
+        err = 'E: No positions in ICM command file ({})\n'.format(visfile)
+        sys.stderr.write(err)
+        return False
     return pos, res
 
 
