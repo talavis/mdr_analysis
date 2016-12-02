@@ -76,10 +76,10 @@ def test_main(capsys):
 
     mica.main(prot_name, '2c0c', icmvis_name, asdata_name)
     out, err = capsys.readouterr()
-    assert out == ('97\tF\n' +
-                   '114\tY\n' +
-                   '138\tI\n' +
-                   '303\tF\n')
+    assert out == ('98\tF\n' +
+                   '115\tY\n' +
+                   '139\tI\n' +
+                   '304\tF\n')
     assert err == ''
 
     # incorrect protein file name

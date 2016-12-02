@@ -50,7 +50,8 @@ def main(prot_file, structcode, icmvis_file, icmpos_file):
         return False
 
     for i in range(len(prot_pos)):
-        print('{}\t{}'.format(prot_pos[i],
+        # shift by +1 so pos1 = 1
+        print('{}\t{}'.format(prot_pos[i]+1,
                               res[i]))
 
 
