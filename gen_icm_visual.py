@@ -28,8 +28,11 @@ def main(protfile, structname, posfile):
         return False
     structseq = structseq[1][0]
 
-    prot_pos = [int(num)-1 for num in
-                open(posfile).read().split('\n')
+    rawdata = open(posfile).read().split('\n')
+    if rawdata[0][0] == '#':
+        rawdata = rawdata[1:]
+    prot_pos = [int(num)-1
+                for num in rawdata
                 if len(num) > 0]
     prot_res = bioinfo.res_at_pos(protseq, prot_pos)
 
