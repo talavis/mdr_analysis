@@ -3,6 +3,7 @@
 TESTDIR=tests
 
 PYTHONPATH=.:find_sequences py.test -vvv ${TESTDIR}/test_bioinfo.py --cov=bioinfo\
+					 ${TESTDIR}/test_blast_by_name.py --cov=blast_by_name\
 					 ${TESTDIR}/test_conservation.py --cov=conservation\
 					 ${TESTDIR}/test_gen_icm_visual.py --cov=gen_icm_visual\
 					 ${TESTDIR}/test_map_as_to_ali.py --cov=map_as_to_ali\
