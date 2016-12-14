@@ -1,0 +1,18 @@
+call _startup
+
+structure=Getarg("struct", "")
+aspos=Getarg("aspos", 0)
+
+read pdb structure
+convertObject a_$structure. 1==1 no yes yes yes yes yes ""+( 1==2 ? "water=tight ":"" )
+
+icmPocketFinder Mol(a_$structure.) no no yes
+file_name = "active_site_" + structure
+
+for i=1, Nof(POCKETS)
+    pocket=POCKETS.Type[$i]
+    active_site=Sphere($pocket a_$structure.!*nap 2.5)
+    fprintf file_name append "%d\t%s\n" i, String(Res(active_site))
+endfor
+
+quit
