@@ -3,6 +3,7 @@
 Some commonly used bioinformatics funtions
 '''
 
+import re
 import sys
 import requests
 
@@ -40,7 +41,8 @@ def get_structseq(pdb):
     '''
     Obtain the sequence of the protein structure from RCSB PDB
     '''
-    url = 'http://www.rcsb.org/pdb/files/fasta.txt?structureIdList={}'.format(pdb)
+    url = ('http://www.rcsb.org/pdb/files/fasta.txt?' +
+           'structureIdList={}'.format(pdb))
     req = requests.get(url)
     raw = req.text
     if len(raw) == 0:
@@ -50,6 +52,26 @@ def get_structseq(pdb):
     heads, seqs = read_fasta_raw(raw)
 
     return (heads, seqs)
+
+
+def parse_icm_sel(selection):
+    '''
+    Parse an ICM selection
+    '''
+    if re.match('^a_.{4}\.[a-z]', selection) is None:
+        return False
+
+    raw = selection[selection.index('/')+1:]
+    positions = [int(pos[2:]) for pos in raw.split(',')
+                 if ':' not in pos]
+    ranges = [pos for pos in raw.split(',')
+              if ':' in pos]
+    for i in range(len(ranges)):
+        limits = ranges[i].split(':')
+        limits[0] = int(limits[0][2:])
+        limits[1] = int(limits[1][2:])
+        positions += list(range(limits[0], limits[1]+1))
+    return sorted(positions)
 
 
 def read_fasta(filename):
@@ -91,6 +113,28 @@ def read_fasta_raw(raw):
             seqs[-1] += line.strip()
 
     return (headers, seqs)
+
+
+def read_icm_res(icm_file):
+    '''
+    Parse ICM String(Res()) output
+    '''
+    sites = list()
+    with open(icm_file) as infile:
+        for line in infile.read().split('\n'):
+            if len(line) == 0:
+                continue
+            chain = re.compile('^a_.{4}\.[ab]')
+            if '|' in line:
+                parts = line.split('|')
+            else:
+                parts = [line]
+            positions = list()
+            for part in parts:
+                if chain.match(part) is not None:
+                    positions += parse_icm_sel(part)
+            sites.append(sorted(positions))
+    return sites
 
 
 def res_at_pos(protseq, positions):

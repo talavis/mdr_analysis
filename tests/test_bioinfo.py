@@ -68,6 +68,21 @@ def test_get_structseq(capsys):
     assert err == 'E: could not retrieve sequence for structure abcde\n'
 
 
+def test_parse_icm_sel():
+    '''
+    Test parse_icm_sel()
+    '''
+    indata = 'a_1yb5.b/^Q167,^R170,^L190:^G193,^W294,^K296,^V298\n'
+
+    expected = [167, 170, 190, 191, 192, 193, 294, 296, 298]
+
+    assert bioinfo.parse_icm_sel(indata) == expected
+
+    # incorrect code
+    indata = 'a_1yb5asd.b/^Q167,^R170,^L190:^G193,^W294,^K296,^V298\n'
+    assert bioinfo.parse_icm_sel(indata) is False
+
+
 def test_read_fasta(capsys):
     '''
     Test read_fasta() by reading a badly formatted FASTA file
@@ -176,6 +191,30 @@ def test_read_fasta_raw():
                'LLRSGKSIRTVLTF')]
 
     assert bioinfo.read_fasta_raw(indata) == (e_heads, e_seqs)
+
+
+def test_read_icm_res():
+    '''
+    Test read_icm_res()
+    '''
+    import tempfile
+
+    indata = ('a_1yb5.3,13/*|a_1yb5.a/^R257,^M260:^A261|' +
+              'a_1yb5.b/^R12,^H36,^V50:^E51,^I54,^Y59:^R61,' +
+              '^P63,^Y67:^S71,^S85:^F87,^I131,^S274,^K276,^Q287\n' +
+              'a_1yb5.b/^Q167,^R170,^L190:^G193,^W294,^K296,^V298\n' +
+              'a_1yb5.a/^K210,^V213:^E215,^G217,^S235:^L237,^K262\n')
+
+    filename = tempfile.mkstemp()[1]
+    with open(filename, 'w') as tmpf:
+        tmpf.write(indata)
+
+    expected = [[12, 36, 50, 51, 54, 59, 60, 61, 63, 67, 68, 69, 70,
+                 71, 85, 86, 87, 131, 257, 260, 261, 274, 276, 287],
+                [167, 170, 190, 191, 192, 193, 294, 296, 298],
+                [210, 213, 214, 215, 217, 235, 236, 237, 262]]
+
+    assert bioinfo.read_icm_res(filename) == expected
 
 
 def test_res_at_pos(capsys):
