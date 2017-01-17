@@ -38,7 +38,11 @@ def test_compare_res():
     # gaps = missmatch
     expected = [1]*5 + [0]*5 + [1]*10
     assert seq_id.compare_res(seq1, seq2, False) == expected
-
+    # gaps in both
+    seq1 = 'ACDEF-----AAAARSTVWY'
+    seq2 = 'ACDEF-----MNPQRSTVWY'
+    expected = [1]*5 + [0]*4 + [1]*6
+    assert seq_id.compare_res(seq1, seq2, False) == expected
 
 def test_main(capsys):
     '''

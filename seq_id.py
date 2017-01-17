@@ -35,6 +35,8 @@ def compare_res(sequence1, sequence2, skip=True):
             if sequence1[i] == '-' or sequence2[i] == '-':
                 continue
         if sequence1[i] == sequence2[i]:
+            if sequence1[i] == '-' and sequence2[i] == '-':
+                continue
             matches.append(1)
         else:
             matches.append(0)
