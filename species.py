@@ -52,19 +52,25 @@ def print_tax_tree(node, level=0):
             print_tax_tree(children[i], level+1)
 
 
-def main(fasta_name, taxonomy_name):
+def main(fasta_name, taxonomy_name, options = []):
     '''Calculating species memberships for sequences in a FASTA file'''
     headers, sequences = bioinfo.read_fasta(fasta_name)
     species = [bioinfo.get_species(h) for h in headers]
 
     tax_hits = match_taxonomy(taxonomy_name, species)
     tax_tree = make_taxtree(tax_hits)
-    print_tax_tree(tax_tree)
+
+    print_tree = True
+    if len(options) > 0:
+        if options[0] == 'or':
+            print_tree = False
+    if print_tree:
+        print_tax_tree(tax_tree)
     print('Highest common: {}'.format(find_highest_common(tax_tree)))
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        sys.stderr.write('Usage: {} <FASTA file> <taxonomy file>\n'.format(sys.argv[0]))
+    if len(sys.argv) < 3:
+        sys.stderr.write('Usage: {} <FASTA file> <taxonomy file> [only print root: or]\n'.format(sys.argv[0]))
         sys.exit(1)
-    main(sys.argv[1], sys.argv[2])
+    main(sys.argv[1], sys.argv[2], sys.argv[3:])
