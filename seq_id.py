@@ -93,5 +93,5 @@ if __name__ == '__main__':
         sys.stderr.write(USAGE_INFO)
         sys.exit()
 
-    if main(sys.argv[1]) is False:
+    if main(sys.argv[1], sys.argv[2:]) is False:
         sys.exit(1)
