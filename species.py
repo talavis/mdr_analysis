@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-'''Calculating species memberships for sequences in a FASTA file'''
+'''
+Calculating species memberships for sequences in a FASTA file
+'''
 
 import sys
 
@@ -19,8 +21,10 @@ def find_highest_common(node):
 
 
 def make_taxtree(hits):
-    '''Generate a taxonomy tree from a taxonomy list
-    returns the root node'''
+    '''
+    Generate a taxonomy tree from a taxonomy list
+    returns the root node
+    '''
     root = taxnode.TaxNode('root')
     for hit in range(len(hits)):
         taxonomy = [species.strip() for species in hits[hit][8].split(';')]
@@ -34,8 +38,10 @@ def make_taxtree(hits):
 
 
 def match_taxonomy(filename, species):
-    '''Match a species list with the taxonomy
-    filename: filename for a UniProt taxonomy file'''
+    '''
+    Match a species list with the taxonomy
+    filename: filename for a UniProt taxonomy file
+    '''
     with open(filename) as infile:
         lines = [line for line in infile.read().split('\n') if len(line) > 0]
         hits = [line.split('\t') for line in lines if line.split('\t')[2] in species]
@@ -44,7 +50,9 @@ def match_taxonomy(filename, species):
 
 
 def print_tax_tree(node, level=0):
-    '''Print a taxonomy tree, starting from the root'''
+    '''
+    Print a taxonomy tree, starting from the root
+    '''
     print('{}\\{}'.format('  '*level, node.name))
     children = tuple(node.children)
     if len(children) > 0:
@@ -53,7 +61,9 @@ def print_tax_tree(node, level=0):
 
 
 def main(fasta_name, taxonomy_name, options = []):
-    '''Calculating species memberships for sequences in a FASTA file'''
+    '''
+    Calculating species memberships for sequences in a FASTA file
+    '''
     headers, sequences = bioinfo.read_fasta(fasta_name)
     species = [bioinfo.get_species(h) for h in headers]
 
