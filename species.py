@@ -53,7 +53,7 @@ def print_tax_tree(node, level=0):
     '''
     Print a taxonomy tree, starting from the root
     '''
-    print('{}\\{}'.format('  '*level, node.name))
+    print('{}\\{}\t{}'.format('  '*level, node.name, node.child_end_count()))
     children = tuple(node.children)
     if len(children) > 0:
         for i in range(len(children)):
