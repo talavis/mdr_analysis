@@ -23,6 +23,19 @@ class TaxNode:
         if new_child.name not in [child.name for child in self.children]:
             self._children.append(new_child)
 
+    def child_end_count(self):
+        '''
+        Return the number of end-point nodes, i.e. the number of species 
+        in the current branch of the tree.
+        '''
+        if len(self.children) == 0:
+            return 1
+        count = 0
+        for child in self.children:
+            count += child.child_end_count()
+
+        return count
+
     @property
     def children(self):
         '''
