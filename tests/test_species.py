@@ -70,8 +70,8 @@ def test_print_tax_tree(capsys):
     root = species.make_taxtree(specs)
     species.print_tax_tree(root)
     out, err = capsys.readouterr()
-    expected = ('\\root\n  \\a\n    \\a1\n      \\a11\n      \\a12\n    ' +
-                '\\a2\n      \\a21\n  \\b\n    \\b1\n      \\b11\n')
+    expected = ('\\root\t4\n  \\a\t3\n    \\a1\t2\n      \\a11\t1\n      \\a12\t1\n    ' +
+                '\\a2\t1\n      \\a21\t1\n  \\b\t1\n    \\b1\t1\n      \\b11\t1\n')
     assert out == expected
 
 
@@ -87,25 +87,32 @@ def test_main(capsys):
     filename_tax = 'tests/testdata/tax_test.tab'
     species.main(filename_fasta, filename_tax)
     out, err = capsys.readouterr()
-    expected = ('\\root\n  \\Eukaryota\n    \\Metazoa\n      \\Chordata\n        ' +
-                '\\Craniata\n          \\Vertebrata\n            \\Euteleostomi\n' +
-                '              \\Mammalia\n                \\Eutheria\n' +
-                '                  \\Euarchontoglires\n                    ' +
-                '\\Primates\n                      \\Haplorrhini\n' +
-                '                        \\Catarrhini\n                          ' +
-                '\\Hominidae\n                            \\Homo\n                    ' +
-                '\\Glires\n                      \\Rodentia\n                        ' +
-                '\\Sciurognathi\n                          \\Muroidea\n' +
-                '                            \\Muridae\n                              ' +
-                '\\Murinae\n                                \\Rattus\n    ' +
-                '\\Viridiplantae\n      \\Streptophyta\n        \\Embryophyta\n' +
-                '          \\Tracheophyta\n            \\Spermatophyta\n              ' +
-                '\\Magnoliophyta\n                \\eudicotyledons\n                  ' +
-                '\\Gunneridae\n                    \\Pentapetalae\n' +
-                '                      \\rosids\n                        \\malvids\n' +
-                '                          \\Brassicales\n                            ' +
-                '\\Brassicaceae\n                              \\Camelineae\n' +
-                '                                \\Arabidopsis\n' +
+    expected = ('\\root\t3\n  \\Eukaryota\t3\n    \\Metazoa\t2\n      \\Chordata\t2\n        ' +
+                '\\Craniata\t2\n          \\Vertebrata\t2\n            \\Euteleostomi\t2\n' +
+                '              \\Mammalia\t2\n                \\Eutheria\t2\n' +
+                '                  \\Euarchontoglires\t2\n                    ' +
+                '\\Primates\t1\n                      \\Haplorrhini\t1\n' +
+                '                        \\Catarrhini\t1\n                          ' +
+                '\\Hominidae\t1\n                            \\Homo\t1\n                    ' +
+                '\\Glires\t1\n                      \\Rodentia\t1\n                        ' +
+                '\\Sciurognathi\t1\n                          \\Muroidea\t1\n' +
+                '                            \\Muridae\t1\n                              ' +
+                '\\Murinae\t1\n                                \\Rattus\t1\n    ' +
+                '\\Viridiplantae\t1\n      \\Streptophyta\t1\n        \\Embryophyta\t1\n' +
+                '          \\Tracheophyta\t1\n            \\Spermatophyta\t1\n              ' +
+                '\\Magnoliophyta\t1\n                \\eudicotyledons\t1\n                  ' +
+                '\\Gunneridae\t1\n                    \\Pentapetalae\t1\n' +
+                '                      \\rosids\t1\n                        \\malvids\t1\n' +
+                '                          \\Brassicales\t1\n                            ' +
+                '\\Brassicaceae\t1\n                              \\Camelineae\t1\n' +
+                '                                \\Arabidopsis\t1\n' +
                 'Highest common: Eukaryota\n')
-
     assert out == expected
+
+    # test parameter "or"
+    filename_fasta = tempfile.mkstemp()[1]
+    with open(filename_fasta, 'w') as tmpf:
+        tmpf.write(infasta)
+    filename_tax = 'tests/testdata/tax_test.tab'
+    species.main(filename_fasta, filename_tax, ['or'])
+    out, err = capsys.readouterr()
