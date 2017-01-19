@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 '''
-Filter the sequences, keeping only the ones present in 
+Filter the sequences, keeping only the ones present in
 the provided taxonomy file.
 '''
 
@@ -11,7 +11,7 @@ import bioinfo
 
 def main(fasta_file, taxonomy_file):
     '''
-    Filter the sequences, keeping only the ones present in 
+    Filter the sequences, keeping only the ones present in
     the provided taxonomy file.
     '''
     species = read_species(taxonomy_file)
@@ -38,7 +38,8 @@ def read_species(taxonomy_file):
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
-        sys.stderr.write('Usage: {} <fasta file> <taxonomy file>\n'.format(sys.argv[0]))
+        USAGE = 'Usage: {} <fasta file> <taxonomy file>\n'.format(sys.argv[0])
+        sys.stderr.write()
         sys.exit(1)
     if main(sys.argv[1], sys.argv[2]) is False:
         sys.exit(1)
