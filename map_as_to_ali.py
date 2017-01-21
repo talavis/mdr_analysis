@@ -120,7 +120,6 @@ def map_sequences(query_seq, ref_seq, query_pos, query_res):
                                                                     query_res[p],
                                                                     query_seq[ind]))
             sys.stderr.write(error)
-            return False
         try:
             new_pos[p] = ref_seq.index(query_seq[ind:ind+6])
         except ValueError:
