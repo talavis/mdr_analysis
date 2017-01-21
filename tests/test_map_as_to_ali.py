@@ -179,8 +179,9 @@ def test_map_sequences(capsys):
     # incorrect residue
     positions = [65, 71, 105, 270, 284]
     residues = ['N', 'Y', 'A', 'G', 'L']
-    assert maa.map_sequences(struct_seq, prot_seq, positions, residues) is False
-    err = capsys.readouterr()[1]
+    maa.map_sequences(struct_seq, prot_seq, positions, residues)
+    out, err = capsys.readouterr()
+    assert out == ''
     assert err == ('E: the protein sequence does not match the position data; ' +
                    'Position 106 should be A, but is Y\n')
 

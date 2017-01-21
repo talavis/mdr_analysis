@@ -125,8 +125,9 @@ def test_main(capsys):
     badpos_name = tempfile.mkstemp()[1]
     with open(badpos_name, 'w') as tmpf:
         tmpf.write(badposdata)
-    assert mica.main(prot_name, '2c0c', badpos_name, asdata_name) is False
-    err = capsys.readouterr()[1]
+    mica.main(prot_name, '2c0c', badpos_name, asdata_name)
+    out, err = capsys.readouterr()
+    assert out == '98\tS\n'
     assert err == ('E: the protein sequence does not match the ' +
                    'position data; Position 89 should be S, but is F\n')
 
