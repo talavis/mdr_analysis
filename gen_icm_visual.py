@@ -2,8 +2,8 @@
 '''
 Generate the commands needed for visualisation of data on a structure in ICM
 
-input: proteinsekvens, strukturnamn, positioner
-output: kommandon för att visualisera i icm
+input: protein sequence, structure name, positions
+output: commands for making a visualisation in ICM
 '''
 
 import sys
