@@ -82,12 +82,11 @@ def read_vis(visfile):
 
 if __name__ == '__main__':
     if len(sys.argv) != 5:
-        USAGE = ('Usage: {} '.format(sys.argv[0]) +
-                 '<protein sequence> ' +
-                 '<structure code> ' +
-                 '<ICM visualisation> ' +
-                 '<ICM active site positions>\n')
-        sys.stderr.write(USAGE)
+        sys.stderr.write('Usage: {} '.format(sys.argv[0]) +
+                         '<protein sequence> ' +
+                         '<structure code> ' +
+                         '<ICM visualisation> ' +
+                         '<ICM active site positions>\n')
         sys.exit(1)
 
     if main(*sys.argv[1:]) is False:
