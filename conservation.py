@@ -18,9 +18,13 @@ def get_most_conserved(freq_table, align_len):
         num_positions = len(freq_table.pssm)
 
     for pos in range(num_positions):
-        freq_table_inv = dict((j, i) for i, j in freq_table[pos].items())
-        best_conserved = freq_table_inv[max(freq_table_inv)]
-        score = freq_table[pos][best_conserved]/align_len
+        if list(freq_table[pos].values()).count(max(freq_table[pos].values())) == 1: 
+            freq_table_inv = dict((j, i) for i, j in freq_table[pos].items())
+            best_conserved = freq_table_inv[max(freq_table_inv)]
+            score = freq_table[pos][best_conserved]/align_len
+        else:
+            best_conserved = 'X'
+            score = max(freq_table[pos].values())/align_len
         result.append((score, best_conserved))
 
     return result
@@ -60,11 +64,11 @@ def main(filename, refseq=None):
         print('# {}'.format(refseq))
     p = 1
     for i in range(len(freq_table.pssm)):
-        if cons[i][1] != '-':
-            if refseq_p[i] != '-':
-                print('{ps}\t{rs}\t{mc}\t{rate:.3}'.format(ps=p, rs=refseq_p[i],
+#        if cons[i][1] != '-':
+        if refseq_p[i] != '-':
+            print('{ps}\t{rs}\t{mc}\t{rate:.3}'.format(ps=p, rs=refseq_p[i],
                                                            mc=cons[i][1], rate=cons[i][0]))
-                p += 1
+            p += 1
 
 
 if __name__ == '__main__':
