@@ -72,9 +72,7 @@ if __name__ == '__main__':
         sys.stderr.write('Usage: {0} <alignment file> [reference seq]\n'.format(sys.argv[0]))
         sys.exit(1)
 
-    filename = sys.argv[1]
-    if len(sys.argv) == 2:
-        refseq = None
+    if len(sys.argv) == 3:
+        main(sys.argv[1], sys.argv[2])
     else:
-        refseq = sys.argv[2]
-    main(filename, refseq)
+        main(sys.argv[1])
