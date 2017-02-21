@@ -36,7 +36,9 @@ def get_most_conserved(freq_table, align_len):
 
 
 def make_freq_table(alignment):
-    '''Make a pssm of an alignment'''
+    '''
+    Make a pssm of an alignment
+    '''
     summary = AlignInfo.SummaryInfo(alignment)
     consensus = summary.dumb_consensus()
     freq_table = summary.pos_specific_score_matrix(consensus)
@@ -45,8 +47,10 @@ def make_freq_table(alignment):
 
 
 def main(filename, refseq=None):
-    '''Read an alignment in FASTA format
-    Calculate the conservation per position'''
+    '''
+    Read an alignment in FASTA format
+    Calculate the conservation per position
+    '''
     # load alignments
     alignment = AlignIO.read(filename, 'fasta')
 
