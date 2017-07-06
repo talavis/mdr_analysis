@@ -21,19 +21,19 @@ def map_cons(headers, seqs, data):
     return ali_data
 
 
-def map_pos(pos, sequence):
+def map_pos(position, sequence):
     '''
     Map a position in a protein to the position in the alignment
     input: pos1 = 1
     output: pos1 = 0
     '''
-    p = 0
+    pos = 0
     for i in range(len(sequence)):
         if sequence[i] != '-':
-            p += 1
-        if p == pos:
+            pos += 1
+        if pos == position:
             return i
-    err = 'E: position {} not found in {}\n'.format(pos, sequence[:20])
+    err = 'E: position {} not found in {}\n'.format(position, sequence[:20])
     sys.stderr.write(err)
     return False
 
@@ -70,7 +70,7 @@ def read_data(filename):
         sys.stderr.write('E: the file {} has no reference\n'.format(filename))
         return False
     protname = lines[0][1:].strip()
-    lines = [l for l in lines[1:] if len(l) > 0]
+    lines = [l for l in lines[1:] if l]
     data = [line.split('\t') for line in lines]
     positions = [int(dat[0]) for dat in data]
     ratios = [float(dat[3]) for dat in data]

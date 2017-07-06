@@ -19,7 +19,7 @@ def main(filename, limit=0.9):
         lines = lines[1:]
     else:
         refline = None
-    lines = [l for l in lines if len(l) > 0]
+    lines = [l for l in lines if l]
     hits = [l for l in lines
             if float(l.split('\t')[3]) > limit]
 

@@ -33,7 +33,7 @@ def read_species(taxonomy_file):
     return [line.split('\t')[2]
             for line
             in raw
-            if len(line) > 0]
+            if line]
 
 
 if __name__ == '__main__':

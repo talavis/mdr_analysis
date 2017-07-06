@@ -43,7 +43,7 @@ def match_taxonomy(filename, species):
     filename: filename for a UniProt taxonomy file
     '''
     with open(filename) as infile:
-        lines = [line for line in infile.read().split('\n') if len(line) > 0]
+        lines = [line for line in infile.read().split('\n') if line]
         hits = [line.split('\t') for line in lines if line.split('\t')[2] in species]
 
     return hits
@@ -55,12 +55,12 @@ def print_tax_tree(node, level=0):
     '''
     print('{}\\{}\t{}'.format('  '*level, node.name, node.child_end_count()))
     children = tuple(node.children)
-    if len(children) > 0:
+    if children:
         for i in range(len(children)):
             print_tax_tree(children[i], level+1)
 
 
-def main(fasta_name, taxonomy_name, options = []):
+def main(fasta_name, taxonomy_name, options=None):
     '''
     Calculating species memberships for sequences in a FASTA file
     '''
@@ -71,7 +71,7 @@ def main(fasta_name, taxonomy_name, options = []):
     tax_tree = make_taxtree(tax_hits)
 
     print_tree = True
-    if len(options) > 0:
+    if options:
         if options[0] == 'or':
             print_tree = False
     if print_tree:
@@ -81,6 +81,7 @@ def main(fasta_name, taxonomy_name, options = []):
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
-        sys.stderr.write('Usage: {} <FASTA file> <taxonomy file> [only print root: or]\n'.format(sys.argv[0]))
+        sys.stderr.write('Usage: {} <FASTA file> '.format(sys.argv[0]) +
+                         '<taxonomy file> [only print root: or]\n')
         sys.exit(1)
     main(sys.argv[1], sys.argv[2], sys.argv[3:])

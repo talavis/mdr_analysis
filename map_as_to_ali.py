@@ -83,19 +83,19 @@ def map_as(headers, seqs, refprot, as_pos):
     return ali_data
 
 
-def map_pos(pos, sequence):
+def map_pos(position, sequence):
     '''
     Map a position in a protein to the position in the alignment
     input: pos1 = 1
     output: pos1 = 0
     '''
-    p = 0
+    pos = 0
     for i in range(len(sequence)):
         if sequence[i] != '-':
-            p += 1
-        if p == pos:
+            pos += 1
+        if pos == position:
             return i
-    err = 'E: position {} not found in {}\n'.format(pos, sequence[:20])
+    err = 'E: position {} not found in {}\n'.format(position, sequence[:20])
     sys.stderr.write(err)
     return False
 
@@ -108,20 +108,20 @@ def map_sequences(query_seq, ref_seq, query_pos, query_res):
     '''
     ref_seq = ref_seq.replace('-', '')
     new_pos = [0] * len(query_pos)
-    for p in range(len(query_pos)):
-        ind = query_pos[p]
+    for pos in range(len(query_pos)):
+        ind = query_pos[pos]
         if ind >= len(query_seq):
             error = 'E: position outside protein ({})\n'.format(ind)
             sys.stderr.write(error)
             return False
-        if query_seq[ind] != query_res[p]:
+        if query_seq[ind] != query_res[pos]:
             error = ('E: the protein sequence does not match the position data; ' +
-                     'Position {} should be {}, but is {}\n'.format(query_pos[p]+1,
-                                                                    query_res[p],
+                     'Position {} should be {}, but is {}\n'.format(query_pos[pos]+1,
+                                                                    query_res[pos],
                                                                     query_seq[ind]))
             sys.stderr.write(error)
         try:
-            new_pos[p] = ref_seq.index(query_seq[ind:ind+6])
+            new_pos[pos] = ref_seq.index(query_seq[ind:ind+6])
         except ValueError:
             error = ('E: the sequence {} '.format(query_seq[ind:ind+6]) +
                      'is not found in the second protein\n')
@@ -146,9 +146,9 @@ def read_icmdata(filename):
     try:
         # check/remove header and empty lines
         if lines[0][0] == '-':
-            lines = [line for line in lines[1:] if len(line) > 0]
+            lines = [line for line in lines[1:] if line]
         else:
-            lines = [line for line in lines if len(line) > 0]
+            lines = [line for line in lines if line]
         data = [line.split() for line in lines]
         # remove non-amino acids
         data = [dat for dat in data if dat[2] == 'Amino']
@@ -170,7 +170,7 @@ def read_map_raw(indata):
     seqs = list()
     data = list()
     for line in indata.split('\n'):
-        if len(line) == 0:
+        if not line:
             continue
         cols = line.split('\t')
         if cols[0][:4] == 'ali:':

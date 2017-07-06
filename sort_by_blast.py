@@ -11,7 +11,7 @@ def read_blast(filename):
     '''Read a tabular BLAST output file'''
     with open(filename) as infile:
         raw = infile.read()
-        data = tuple(line.split('\t') for line in raw.split('\n') if len(line) > 0)
+        data = tuple(line.split('\t') for line in raw.split('\n') if line)
 
     return data
 
@@ -21,7 +21,8 @@ def match_blast_to_fasta(identifier, headers):
        Returns False if not found'''
     match = [header for header in headers if identifier in header]
     if len(match) > 1:
-        sys.stderr.write('I: identifier ({}) found in multiple headers; returning the first\n'.format(identifier))
+        sys.stderr.write('I: identifier ({}) found in '.format(identifier) +
+                         'multiple headers; returning the first\n')
     try:
         return headers.index(match[0])
     except IndexError:

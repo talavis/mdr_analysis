@@ -51,7 +51,7 @@ def main(filename, refseq):
 
     # confirm that there is _one_ matching sequence
     refseq_matches = [s for s in headers if refseq in s]
-    if len(refseq_matches) == 0:
+    if not refseq_matches:
         error = 'E: Reference sequence ({}) not found in the sequence file\n'.format(refseq)
         sys.stderr.write(error)
         return False
@@ -78,6 +78,6 @@ if __name__ == '__main__':
     if len(sys.argv) != 3:
         sys.stderr.write('Usage: {} <seqfile> <refseq>\n'.format(sys.argv[0]))
         sys.exit(1)
-        
+
     if main(sys.argv[1], sys.argv[2]) is False:
         sys.exit(1)
