@@ -16,10 +16,16 @@ def main(ali_filename, tree_filename):
     ali = bioinfo.read_fasta(ali_filename)
     tree_raw = open(tree_filename).read()
 
-    basename = ali_filename[:ali_filename.index('.')]
-    for i in range(len(ali[1][1])):
+    # get rid of path
+    startpos = len(ali_filename)-ali_filename[::-1].index('/')
+    basename = ali_filename[startpos:ali_filename.index('.', startpos)]
+    pos = 0
+    for i in range(len(ali[1][0])):
+        if ali[1][0][i] == '-':
+            continue
+        pos += 1
         tree_new = tree_raw
-        tree_out = open(basename + str(i+1) + '.tree', 'w')
+        tree_out = open(basename + str(pos) + '.tree', 'w')
         # assume uniprot headers; accession code between 1st and 2nd |
         # in other words: str[3:str.index('|', 3)
         for head in range(len(ali[0])):
