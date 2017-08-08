@@ -19,7 +19,7 @@ def main(protfile, structname, posfile):
     pos 1 = 1
     '''
     protseq = bioinfo.read_fasta(protfile)
-    if protseq is False or len(protseq) == 0:
+    if protseq is False:
         return False
     protseq = protseq[1][0]
 
@@ -33,7 +33,7 @@ def main(protfile, structname, posfile):
         rawdata = rawdata[1:]
     prot_pos = [int(num)-1
                 for num in rawdata
-                if len(num) > 0]
+                if num]
     prot_res = bioinfo.res_at_pos(protseq, prot_pos)
 
     struct_pos = maa.map_sequences(protseq, structseq, prot_pos, prot_res)
