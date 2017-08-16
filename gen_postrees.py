@@ -29,7 +29,11 @@ def main(ali_filename, tree_filename):
         # assume uniprot headers; accession code between 1st and 2nd |
         # in other words: str[3:str.index('|', 3)
         for head in range(len(ali[0])):
-            acc = ali[0][head][3:ali[0][head].index('|', 3)]
+            try:
+                acc = ali[0][head][3:ali[0][head].index('|', 3)]
+            except ValueError:
+                sys.stderr.write('E: sequence {} not UniProt formatted\n'.format(ali[0][head]))
+                return False
             tree_new = tree_new.replace(acc, '{}_{}'.format(ali[1][head][i], acc))
         tree_out.write(tree_new)
         tree_out.close()
@@ -38,4 +42,5 @@ if __name__ == '__main__':
     if len(sys.argv) != 3:
         sys.stderr.write('Usage: {} <FASTA alignment> <tree file>\n'.format(sys.argv[0]))
         sys.exit(1)
-    main(sys.argv[1], sys.argv[2])
+    if not main(sys.argv[1], sys.argv[2]):
+        sys.exit(2)
