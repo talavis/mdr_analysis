@@ -10,10 +10,10 @@ read pdb "4a27" # vat1l
 undisplay a_*.!a
 
 # superimpose
-#function simpose ( os_static os_movable )
-#    transform os_movable. R_out
-#    superimpose os_static.a os_movable.a
-#endfunction
+#function simpose ( ms_static ms_movable )
+#    transform ms_movable. R_out
+    superimpose ms_static.a ms_movable.a
+endfunction
 
 #simpose(a_1zsy. a_2y05.)
 #simpose(a_1zsy. a_2zb4.)
@@ -38,5 +38,19 @@ function show_cons( rs_cons )
     color rs_cons rgb={255,0,0}
     color ribbon rs_cons rgb={255,0,0}
 #    undisplay a_*.!a*
-    undisplay store all
+#    undisplay store all
 endfunction
+
+function show_cons2( rs_cons )
+    if(Type(rs_cons)!="aselection") return "Error: selection expected"
+    display xstick rs_cons
+    display ribbon Obj(rs_cons)
+    color Obj(rs_cons) rgb={50,255,255}
+    color ribbon Obj(rs_cons) rgb={50,255,255}
+    color rs_cons rgb={255,0,0}
+    color ribbon rs_cons rgb={255,0,0}
+    undisplay a_*.!a*
+#    undisplay store all
+endfunction
+
+show_cons2(cons_eu)
