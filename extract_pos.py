@@ -90,3 +90,4 @@ if __name__ == '__main__':
         sys.stderr.write('Usage: {} '.format(sys.argv[0]) +
                          '<FASTA file> <Position file>\n')
         sys.exit(1)
+    main(sys.argv[1], sys.argv[2])
