@@ -71,21 +71,24 @@ set field a_4a27./^X79,^X80,^X81,^X82,^X84,^X85,^X86,^X87,^X88,^X89,^X90,^X92,^X
 
 set field a_4a27./^X43,^X47,^X49,^X50,^X51,^X52,^X55,^X64,^X66,^X69,^X74,^X77,^X78,^X79,^X80,^X81,^X82,^X84,^X85,^X86,^X87,^X88,^X89,^X90,^X91,^X92,^X93,^X95,^X96,^X97,^X98,^X99,^X100,^X101,^X102,^X103,^X104,^X105,^X106,^X107,^X108,^X109,^X110,^X111,^X112,^X114,^X117,^X119,^X121,^X122,^X123,^X124,^X125,^X126,^X127,^X128,^X129,^X130,^X131,^X132,^X134,^X135,^X136,^X137,^X138,^X139,^X140,^X141,^X142,^X145,^X146,^X147,^X149,^X150,^X152,^X153,^X155,^X157,^X158,^X159,^X160,^X161,^X162,^X164,^X165,^X166,^X167,^X168,^X169,^X171,^X172,^X173,^X174,^X176,^X177,^X178,^X179,^X181,^X182,^X183,^X184,^X185,^X186,^X187,^X188,^X189,^X190,^X191,^X192,^X193,^X194,^X195,^X196,^X197,^X198,^X199,^X200,^X201,^X202,^X203,^X205,^X206,^X207,^X208,^X209,^X210,^X211,^X212,^X213,^X214,^X217,^X218,^X219,^X220,^X221,^X222,^X224,^X225,^X226,^X227,^X228,^X229,^X230,^X231,^X232,^X234,^X235,^X236,^X237,^X238,^X240,^X242,^X243,^X246,^X247,^X248,^X249,^X250,^X251,^X252,^X253,^X254,^X255,^X256,^X258,^X259,^X260,^X261,^X262,^X263,^X264,^X265,^X266,^X267,^X268,^X269,^X270,^X271,^X272,^X273,^X274,^X275,^X276,^X277,^X278,^X279,^X281,^X282,^X283,^X284,^X285,^X286,^X287,^X288,^X289,^X290,^X291,^X292,^X294,^X295,^X296,^X297,^X298,^X299,^X300,^X301,^X302,^X303,^X304,^X305,^X306,^X308,^X309,^X310,^X311,^X312,^X313,^X314,^X315,^X316,^X317,^X318,^X319,^X321,^X322,^X323,^X324,^X325,^X326,^X327,^X329,^X330,^X333,^X334,^X338,^X341,^X342,^X344,^X345,^X347,^X348,^X349,^X351,^X352,^X353,^X354,^X355,^X356,^X357,^X358,^X359,^X360 name = "cons_4a27_90_mam"
 
-function show_cons( rs_cons )
+function show_cons( s_consname )
+    rs_cons = Select(a_*.*/ s_consname )
     display xstick rs_cons
     display ribbon Obj(rs_cons)
     color Obj(rs_cons) rgb={50,255,255}
     color ribbon Obj(rs_cons) rgb={50,255,255}
     color rs_cons rgb={255,0,0}
-    color ribbon rs_cons rgb={255,0,0}
 endfunction
 
-function show_cons2( rs_cons )
-    display xstick rs_cons
-    display ribbon Obj(rs_cons)
-    color Obj(rs_cons) rgb={50,255,255}
-    color ribbon Obj(rs_cons) rgb={50,255,255}
-    color rs_cons rgb={255,0,0}
-    color ribbon rs_cons rgb={255,0,0}
-    undisplay a_*.!a*
+function show_tri( s_consbase )
+    rs_cons_eu = Select(a_*.*/ s_consbase + "_eu" )
+    rs_cons_vert = Select(a_*.*/ s_consbase + "_vert" )
+    rs_cons_mam = Select(a_*.*/ s_consbase + "_mam" )
+    display xstick rs_cons_mam
+    display ribbon Obj(rs_cons_mam)
+    color Obj(rs_cons_mam) rgb={50,255,255}
+    color ribbon Obj(rs_cons_mam) rgb={50,255,255}
+    color rs_cons_mam rgb={255,0,0}
+    color rs_cons_vert rgb={0,150,255}
+    color rs_cons_eu rgb={110,110,110}
 endfunction
