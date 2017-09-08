@@ -39,18 +39,58 @@ def test_conservation():
     assert conservation(seqs) == expected
 
 
+def eval_alignments():
+    '''
+    Evaluate mutliple versions (different groupings) of the alignment
+    '''
+
+
+def test_eval_alignments():
+    '''
+    Test eval_alignments()
+    '''
+
 
 def main(filename):
     '''
     Read a FASTA alignment and perform a conservation analysis
     using groups of residues
     '''
-
+    headers, sequences = bioinfo.read_fasta(filename)
+    
 
 def test_main(capsys):
     '''
     Test main()
     '''
+    import tempfile
+    filename = mkstemp()[1]
+    data = ''
+    with open(filename, 'w') as tmpfile:
+        tmpfs.write(data)
+    main(filename)
+    outerr = capsys.readouterr
+    assert outerr[0] == ''
+
+
+def transform(sequences):
+    '''
+    Transform an alignment by e.g. grouping residues
+    Return: the same alignment with the relevant residues replaced
+    by their group names
+    '''
+
+
+def test_transform():
+    '''
+    Test transform()
+    '''
+    sequences = ('ACDEFGHIKLMNPQRSTVWY',
+                 'ACDEFGHIKLMNPQRSTVWY',
+                 'ACDEFGHIKLMNPQRSTVWY')
+    expected = ''
+    
+    assert transform(sequences) == expected
 
 
 if __name__ == '__main__':
