@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-'''Calculate the conservation in an alignment'''
+'''
+Calculate the conservation in an alignment
+'''
 
 import sys
 
@@ -11,16 +13,16 @@ def get_most_conserved(freq_table, align_len):
     '''
     Determine the most conserved residue and its conservation
     rate in each position.
-    Input should be a PSSM object or a list of dicts
+    Input: a PSSM frequency table or a list of dicts
     (PSSM.pssm, but without [0] in each tuple)
+    Return: a list containing (score, residue)
     '''
-    result = list()
     # depending on input type
     try:
         num_positions = len(freq_table)
     except TypeError:
         num_positions = len(freq_table.pssm)
-
+    result = [0] * num_positions
     for pos in range(num_positions):
         values = list(freq_table[pos].values())
         if values.count(max(values)) == 1:
@@ -30,28 +32,17 @@ def get_most_conserved(freq_table, align_len):
         else:
             best_conserved = 'X'
             score = max(values)/align_len
-        result.append((score, best_conserved))
+        result[pos] = (score, best_conserved)
 
     return result
-
-
-def make_freq_table(alignment):
-    '''
-    Make a pssm of an alignment
-    '''
-    summary = AlignInfo.SummaryInfo(alignment)
-    consensus = summary.dumb_consensus()
-    freq_table = summary.pos_specific_score_matrix(consensus)
-
-    return freq_table
 
 
 def main(filename, refseq=None):
     '''
     Read an alignment in FASTA format
     Calculate the conservation per position
+    Input: filename of alignment in FASA format, optional reference sequence
     '''
-    # load alignments
     alignment = AlignIO.read(filename, 'fasta')
 
     headers = [s.name for s in alignment]
@@ -80,6 +71,37 @@ def main(filename, refseq=None):
                                                        mc=cons[i][1],
                                                        rate=cons[i][0]))
             pos += 1
+
+
+def make_freq_table(alignment):
+    '''
+    Make a pssm of an alignment
+    Input: BioPython alignment object
+    Return: BioPython frequency list [(cons_res, {res:freq})]
+    '''
+    summary = AlignInfo.SummaryInfo(alignment)
+    consensus = summary.dumb_consensus()
+    freq_table = summary.pos_specific_score_matrix(consensus)
+
+    return freq_table
+
+
+def transform_prop(sequences):
+    '''
+    Transform an alignment by grouping residues:
+    I - ILV
+    D - DE
+    K - KR
+    Input: sequences - list of protein sequences
+    Return: the same alignment with the relevant residues replaced
+    by their group names
+    '''
+    for i in range(len(sequences)):
+        sequences[i] = sequences[i].replace('L', 'I')
+        sequences[i] = sequences[i].replace('V', 'I')
+        sequences[i] = sequences[i].replace('E', 'D')
+        sequences[i] = sequences[i].replace('R', 'K')
+    return sequences
 
 
 if __name__ == '__main__':

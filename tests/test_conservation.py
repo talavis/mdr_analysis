@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-'''Calculate the conservation in an alignment'''
+'''
+Testing conservation.py
+'''
 
 from Bio import AlignIO
 
 import conservation
 
 def helper_test_getalign():
-    '''Generate a FASTA file for use in the testing functions'''
+    '''
+    Generate a FASTA file for use in the testing functions
+    '''
     import tempfile
 
     indata = '''>gi|0000000|ref|NP_000000.1| Made-up data [Rattus norvegicus]
@@ -26,7 +30,9 @@ ADDEEGHILL'''
 
 
 def test_get_most_conserved():
-    '''Test get_most_conserved'''
+    '''
+    Test get_most_conserved()
+    '''
     freq_table = [{'K': 0, 'H': 0, 'I': 0, 'L': 0, 'A': 4.0,
                    'C': 0, 'F': 0, 'D': 0, 'G': 0, 'E': 0},
                   {'K': 0, 'H': 0, 'I': 0, 'L': 0, 'A': 0,
@@ -73,43 +79,17 @@ def test_get_most_conserved():
                    'G': 0, 'H': 0, 'I': 0, 'K': 3.0, 'L': 1.0},
                   {'-': 0, 'A': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0,
                    'G': 0, 'H': 0, 'I': 0, 'K': 0, 'L': 4.0}]
-    
+
     real = [(1.0, 'A'), (0.75, 'C'), (1.0, '-'), (0.75, 'E'), (0.25, 'X'),
             (1.0, 'G'), (1.0, 'H'), (1.0, 'I'), (0.75, 'K'), (1.0, 'L')]
 
     assert conservation.get_most_conserved(freq_table, 4) == real
 
 
-def test_make_freq_table():
-    '''Test make_freq_table'''
-    real = [('A', {'-': 0, 'A': 4.0, 'C': 0, 'D': 0, 'E': 0,
-                   'F': 0, 'G': 0, 'H': 0, 'I': 0, 'K': 0, 'L': 0}),
-            ('C', {'-': 0, 'A': 0, 'C': 3.0, 'D': 1.0, 'E': 0,
-                   'F': 0, 'G': 0, 'H': 0, 'I': 0, 'K': 0, 'L': 0}),
-            ('D', {'-': 0, 'A': 0, 'C': 0, 'D': 4.0, 'E': 0,
-                   'F': 0, 'G': 0, 'H': 0, 'I': 0, 'K': 0, 'L': 0}),
-            ('E', {'-': 1.0, 'A': 0, 'C': 0, 'D': 0, 'E': 3.0,
-                   'F': 0, 'G': 0, 'H': 0, 'I': 0, 'K': 0, 'L': 0}),
-            ('X', {'-': 1.0, 'A': 1.0, 'C': 0, 'D': 0, 'E': 1.0,
-                   'F': 1.0, 'G': 0, 'H': 0, 'I': 0, 'K': 0, 'L': 0}),
-            ('G', {'-': 0, 'A': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0,
-                   'G': 4.0, 'H': 0, 'I': 0, 'K': 0, 'L': 0}),
-            ('H', {'-': 0, 'A': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0,
-                   'G': 0, 'H': 4.0, 'I': 0, 'K': 0, 'L': 0}),
-            ('I', {'-': 0, 'A': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0,
-                   'G': 0, 'H': 0, 'I': 4.0, 'K': 0, 'L': 0}),
-            ('K', {'-': 0, 'A': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0,
-                   'G': 0, 'H': 0, 'I': 0, 'K': 3.0, 'L': 1.0}),
-            ('L', {'-': 0, 'A': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0,
-                   'G': 0, 'H': 0, 'I': 0, 'K': 0, 'L': 4.0})]
-
-    alignment = AlignIO.read(helper_test_getalign(), 'fasta')
-
-    assert conservation.make_freq_table(alignment).pssm == real
-
-
 def test_main(capsys):
-    '''Test main()'''
+    '''
+    Test main()
+    '''
     # with a reference sequence
     real = ('# NP_000000.1\n' +
             '1\tA\tA\t1.0\n' +
@@ -143,13 +123,13 @@ def test_main(capsys):
     assert out == real
 
     # incorrect reference
-    conservation.main(helper_test_getalign(), 'incorrect') is False
+    assert conservation.main(helper_test_getalign(), 'incorrect') is False
     out, err = capsys.readouterr()
     expected = 'E: The reference sequence (incorrect) not found among the sequences\n'
     assert err == expected
 
     import tempfile
-    
+
     indata = ('>gi|0000000|ref|NP_000000.1| Made-up data ' +
               '[Rattus norvegicus]\n' +
               'ACD--GHIKL\n'
@@ -180,3 +160,47 @@ def test_main(capsys):
     conservation.main(filename, 'NP_000001.1')
     out, err = capsys.readouterr()
     assert out == expected
+
+
+def test_make_freq_table():
+    '''
+    Test make_freq_table()
+    '''
+    real = [('A', {'-': 0, 'A': 4.0, 'C': 0, 'D': 0, 'E': 0,
+                   'F': 0, 'G': 0, 'H': 0, 'I': 0, 'K': 0, 'L': 0}),
+            ('C', {'-': 0, 'A': 0, 'C': 3.0, 'D': 1.0, 'E': 0,
+                   'F': 0, 'G': 0, 'H': 0, 'I': 0, 'K': 0, 'L': 0}),
+            ('D', {'-': 0, 'A': 0, 'C': 0, 'D': 4.0, 'E': 0,
+                   'F': 0, 'G': 0, 'H': 0, 'I': 0, 'K': 0, 'L': 0}),
+            ('E', {'-': 1.0, 'A': 0, 'C': 0, 'D': 0, 'E': 3.0,
+                   'F': 0, 'G': 0, 'H': 0, 'I': 0, 'K': 0, 'L': 0}),
+            ('X', {'-': 1.0, 'A': 1.0, 'C': 0, 'D': 0, 'E': 1.0,
+                   'F': 1.0, 'G': 0, 'H': 0, 'I': 0, 'K': 0, 'L': 0}),
+            ('G', {'-': 0, 'A': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0,
+                   'G': 4.0, 'H': 0, 'I': 0, 'K': 0, 'L': 0}),
+            ('H', {'-': 0, 'A': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0,
+                   'G': 0, 'H': 4.0, 'I': 0, 'K': 0, 'L': 0}),
+            ('I', {'-': 0, 'A': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0,
+                   'G': 0, 'H': 0, 'I': 4.0, 'K': 0, 'L': 0}),
+            ('K', {'-': 0, 'A': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0,
+                   'G': 0, 'H': 0, 'I': 0, 'K': 3.0, 'L': 1.0}),
+            ('L', {'-': 0, 'A': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0,
+                   'G': 0, 'H': 0, 'I': 0, 'K': 0, 'L': 4.0})]
+
+    alignment = AlignIO.read(helper_test_getalign(), 'fasta')
+
+    assert conservation.make_freq_table(alignment).pssm == real
+
+
+def test_transform_prop():
+    '''
+    Test transform_prop()
+    '''
+    sequences = ['ACDEFGHIKLMNPQRSTVWY',
+                 'ACDEFGHIKLMNPQRSTVWY',
+                 'ACDEFGHIKLMNPQRSTVWY']
+    expected = ['ACDDFGHIKIMNPQKSTIWY',
+                'ACDDFGHIKIMNPQKSTIWY',
+                'ACDDFGHIKIMNPQKSTIWY']
+
+    assert conservation.transform_prop(sequences) == expected
