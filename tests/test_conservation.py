@@ -86,6 +86,20 @@ def test_get_most_conserved():
     assert conservation.get_most_conserved(freq_table, 4) == real
 
 
+def test_group_res_prop():
+    '''
+    Test group_res_prop()
+    '''
+    sequences = ['ACDEFGHIKLMNPQRSTVWY',
+                 'ACDEFGHIKLMNPQRSTVWY',
+                 'ACDEFGHIKLMNPQRSTVWY']
+    expected = ['ACDDFGHIKIMNPNKSSIWY',
+                'ACDDFGHIKIMNPNKSSIWY',
+                'ACDDFGHIKIMNPNKSSIWY']
+
+    assert conservation.group_res_prop(sequences) == expected
+
+
 def test_main(capsys):
     '''
     Test main()
@@ -190,17 +204,3 @@ def test_make_freq_table():
     alignment = AlignIO.read(helper_test_getalign(), 'fasta')
 
     assert conservation.make_freq_table(alignment).pssm == real
-
-
-def test_transform_prop():
-    '''
-    Test transform_prop()
-    '''
-    sequences = ['ACDEFGHIKLMNPQRSTVWY',
-                 'ACDEFGHIKLMNPQRSTVWY',
-                 'ACDEFGHIKLMNPQRSTVWY']
-    expected = ['ACDDFGHIKIMNPNKSSIWY',
-                'ACDDFGHIKIMNPNKSSIWY',
-                'ACDDFGHIKIMNPNKSSIWY']
-
-    assert conservation.transform_prop(sequences) == expected

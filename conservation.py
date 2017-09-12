@@ -37,11 +37,36 @@ def get_most_conserved(freq_table, align_len):
     return result
 
 
-def main(filename, refseq=None):
+def group_res_prop(sequences):
+    '''
+    Transform an alignment by grouping residues by their properties:
+    I - ILV
+    D - DE
+    K - KR
+    S - ST
+    N - NQ
+    Input: sequences - list of protein sequences
+    Return: the same alignment with the relevant residues replaced
+    by their group names
+    '''
+    for i in range(len(sequences)):
+        sequences[i] = sequences[i].replace('L', 'I')
+        sequences[i] = sequences[i].replace('V', 'I')
+        sequences[i] = sequences[i].replace('E', 'D')
+        sequences[i] = sequences[i].replace('R', 'K')
+        sequences[i] = sequences[i].replace('Q', 'N')
+        sequences[i] = sequences[i].replace('T', 'S')
+    return sequences
+
+
+def main(filename, refseq=None, group_res=False):
     '''
     Read an alignment in FASTA format
     Calculate the conservation per position
-    Input: filename of alignment in FASA format, optional reference sequence
+    Input: filename - filename of alignment in FASA format
+    refseq - only keep positions where sequence refseq has a residue
+    group_res - group the residues by residue type
+    
     '''
     alignment = AlignIO.read(filename, 'fasta')
 
@@ -84,28 +109,6 @@ def make_freq_table(alignment):
     freq_table = summary.pos_specific_score_matrix(consensus)
 
     return freq_table
-
-
-def transform_prop(sequences):
-    '''
-    Transform an alignment by grouping residues:
-    I - ILV
-    D - DE
-    K - KR
-    S - ST
-    N - NQ
-    Input: sequences - list of protein sequences
-    Return: the same alignment with the relevant residues replaced
-    by their group names
-    '''
-    for i in range(len(sequences)):
-        sequences[i] = sequences[i].replace('L', 'I')
-        sequences[i] = sequences[i].replace('V', 'I')
-        sequences[i] = sequences[i].replace('E', 'D')
-        sequences[i] = sequences[i].replace('R', 'K')
-        sequences[i] = sequences[i].replace('Q', 'N')
-        sequences[i] = sequences[i].replace('T', 'S')
-    return sequences
 
 
 if __name__ == '__main__':
