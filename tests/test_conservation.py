@@ -199,8 +199,8 @@ def test_transform_prop():
     sequences = ['ACDEFGHIKLMNPQRSTVWY',
                  'ACDEFGHIKLMNPQRSTVWY',
                  'ACDEFGHIKLMNPQRSTVWY']
-    expected = ['ACDDFGHIKIMNPQKSTIWY',
-                'ACDDFGHIKIMNPQKSTIWY',
-                'ACDDFGHIKIMNPQKSTIWY']
+    expected = ['ACDDFGHIKIMNPNKSSIWY',
+                'ACDDFGHIKIMNPNKSSIWY',
+                'ACDDFGHIKIMNPNKSSIWY']
 
     assert conservation.transform_prop(sequences) == expected

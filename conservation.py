@@ -92,6 +92,8 @@ def transform_prop(sequences):
     I - ILV
     D - DE
     K - KR
+    S - ST
+    N - NQ
     Input: sequences - list of protein sequences
     Return: the same alignment with the relevant residues replaced
     by their group names
@@ -101,6 +103,8 @@ def transform_prop(sequences):
         sequences[i] = sequences[i].replace('V', 'I')
         sequences[i] = sequences[i].replace('E', 'D')
         sequences[i] = sequences[i].replace('R', 'K')
+        sequences[i] = sequences[i].replace('Q', 'N')
+        sequences[i] = sequences[i].replace('T', 'S')
     return sequences
 
 
