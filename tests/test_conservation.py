@@ -100,9 +100,9 @@ def test_group_res_prop():
     assert conservation.group_res_prop(sequences) == expected
 
 
-def test_main(capsys):
+def test_consrvation(capsys):
     '''
-    Test main()
+    Test conservation()
     '''
     # with a reference sequence
     real = ('# NP_000000.1\n' +
@@ -114,7 +114,7 @@ def test_main(capsys):
             '6\tI\tI\t1.0\n' +
             '7\tK\tK\t0.75\n' +
             '8\tL\tL\t1.0\n')
-    conservation.main(helper_test_getalign(), 'NP_000000.1')
+    conservation.conservation(helper_test_getalign(), 'NP_000000.1')
     out, err = capsys.readouterr()
     assert out == real
 
@@ -129,15 +129,15 @@ def test_main(capsys):
             '8\t \tI\t1.0\n' +
             '9\t \tK\t0.75\n' +
             '10\t \tL\t1.0\n')
-    conservation.main(helper_test_getalign(), None)
+    conservation.conservation(helper_test_getalign(), None)
     out, err = capsys.readouterr()
     assert out == real
-    conservation.main(helper_test_getalign())
+    conservation.conservation(helper_test_getalign())
     out, err = capsys.readouterr()
     assert out == real
 
     # incorrect reference
-    assert conservation.main(helper_test_getalign(), 'incorrect') is False
+    assert conservation.conservation(helper_test_getalign(), 'incorrect') is False
     out, err = capsys.readouterr()
     expected = 'E: The reference sequence (incorrect) not found among the sequences\n'
     assert err == expected
@@ -171,7 +171,7 @@ def test_main(capsys):
                 '8\tI\tI\t1.0\n' +
                 '9\tK\tK\t0.75\n' +
                 '10\tL\tL\t1.0\n')
-    conservation.main(filename, 'NP_000001.1')
+    conservation.conservation(filename, 'NP_000001.1')
     out, err = capsys.readouterr()
     assert out == expected
 

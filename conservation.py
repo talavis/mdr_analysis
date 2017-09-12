@@ -59,14 +59,13 @@ def group_res_prop(sequences):
     return sequences
 
 
-def main(filename, refseq=None, group_res=False):
+def conservation(filename, refseq=None, group_res=False):
     '''
     Read an alignment in FASTA format
     Calculate the conservation per position
     Input: filename - filename of alignment in FASA format
     refseq - only keep positions where sequence refseq has a residue
     group_res - group the residues by residue type
-    
     '''
     alignment = AlignIO.read(filename, 'fasta')
 
@@ -118,6 +117,6 @@ if __name__ == '__main__':
         sys.exit(1)
 
     if len(sys.argv) == 3:
-        main(sys.argv[1], sys.argv[2])
+        conservation(sys.argv[1], sys.argv[2])
     else:
-        main(sys.argv[1])
+        conservation(sys.argv[1])
