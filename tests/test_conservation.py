@@ -29,6 +29,97 @@ ADDEEGHILL'''
     return filename
 
 
+def test_conservation(capsys):
+    '''
+    Test conservation()
+    '''
+    # with a reference sequence
+    real = ('# NP_000000.1\n' +
+            '1\tA\tA\t1.0\n' +
+            '2\tC\tC\t0.75\n' +
+            '3\tD\tD\t1.0\n' +
+            '4\tG\tG\t1.0\n' +
+            '5\tH\tH\t1.0\n' +
+            '6\tI\tI\t1.0\n' +
+            '7\tK\tK\t0.75\n' +
+            '8\tL\tL\t1.0\n')
+    conservation.conservation(helper_test_getalign(), 'NP_000000.1')
+    out, err = capsys.readouterr()
+    assert out == real
+
+    # Without reference sequence
+    real = ('1\t \tA\t1.0\n' +
+            '2\t \tC\t0.75\n' +
+            '3\t \tD\t1.0\n' +
+            '4\t \tE\t0.75\n' +
+            '5\t \tX\t0.25\n' +
+            '6\t \tG\t1.0\n' +
+            '7\t \tH\t1.0\n' +
+            '8\t \tI\t1.0\n' +
+            '9\t \tK\t0.75\n' +
+            '10\t \tL\t1.0\n')
+    conservation.conservation(helper_test_getalign(), refseq=None)
+    out, err = capsys.readouterr()
+    assert out == real
+    conservation.conservation(helper_test_getalign())
+    out, err = capsys.readouterr()
+    assert out == real
+
+    # incorrect reference
+    assert conservation.conservation(helper_test_getalign(), 'incorrect') is False
+    err = capsys.readouterr()[1]
+    expected = 'E: The reference sequence (incorrect) not found among the sequences\n'
+    assert err == expected
+
+    import tempfile
+
+    indata = ('>gi|0000000|ref|NP_000000.1| Made-up data ' +
+              '[Rattus norvegicus]\n' +
+              'ACD--GHIKL\n'
+              '>gi|0000001|ref|NP_000001.1| Made-up data ' +
+              '[Arabidopsis thaliana]\n' +
+              'ACDEAGHIKL\n' +
+              '>gi|0000002|ref|NP_000002.1| Made-up data ' +
+              '[Homo Sapiens]\n' +
+              'ACD--GHIKL\n' +
+              '>gi|0000003|ref|NP_000003.1| Made-up data ' +
+              '[Arabidopsis thaliana]\n' +
+              'ADD--GHILL\n')
+
+    filename = tempfile.mkstemp()[1]
+    with open(filename, 'w') as tmpf:
+        tmpf.write(indata)
+    expected = ('# NP_000001.1\n' +
+                '1\tA\tA\t1.0\n' +
+                '2\tC\tC\t0.75\n' +
+                '3\tD\tD\t1.0\n' +
+                '4\tE\t-\t0.75\n' +
+                '5\tA\t-\t0.75\n' +
+                '6\tG\tG\t1.0\n' +
+                '7\tH\tH\t1.0\n' +
+                '8\tI\tI\t1.0\n' +
+                '9\tK\tK\t0.75\n' +
+                '10\tL\tL\t1.0\n')
+    conservation.conservation(filename, 'NP_000001.1')
+    out = capsys.readouterr()[0]
+    assert out == expected
+
+    # with residue grouping
+    real = ('1\t \tA\t1.0\n' +
+            '2\t \tC\t0.75\n' +
+            '3\t \tD\t1.0\n' +
+            '4\t \tD\t0.75\n' +
+            '5\t \tX\t0.25\n' +
+            '6\t \tG\t1.0\n' +
+            '7\t \tH\t1.0\n' +
+            '8\t \tI\t1.0\n' +
+            '9\t \tK\t0.75\n' +
+            '10\t \tI\t1.0\n')
+    conservation.conservation(helper_test_getalign(), group_res = True)
+    out, err = capsys.readouterr()
+    assert out == real
+
+
 def test_get_most_conserved():
     '''
     Test get_most_conserved()
@@ -98,82 +189,6 @@ def test_group_res_prop():
                 'ACDDFGHIKIMNPNKSSIWY']
 
     assert conservation.group_res_prop(sequences) == expected
-
-
-def test_consrvation(capsys):
-    '''
-    Test conservation()
-    '''
-    # with a reference sequence
-    real = ('# NP_000000.1\n' +
-            '1\tA\tA\t1.0\n' +
-            '2\tC\tC\t0.75\n' +
-            '3\tD\tD\t1.0\n' +
-            '4\tG\tG\t1.0\n' +
-            '5\tH\tH\t1.0\n' +
-            '6\tI\tI\t1.0\n' +
-            '7\tK\tK\t0.75\n' +
-            '8\tL\tL\t1.0\n')
-    conservation.conservation(helper_test_getalign(), 'NP_000000.1')
-    out, err = capsys.readouterr()
-    assert out == real
-
-    # Without reference sequence
-    real = ('1\t \tA\t1.0\n' +
-            '2\t \tC\t0.75\n' +
-            '3\t \tD\t1.0\n' +
-            '4\t \tE\t0.75\n' +
-            '5\t \tX\t0.25\n' +
-            '6\t \tG\t1.0\n' +
-            '7\t \tH\t1.0\n' +
-            '8\t \tI\t1.0\n' +
-            '9\t \tK\t0.75\n' +
-            '10\t \tL\t1.0\n')
-    conservation.conservation(helper_test_getalign(), None)
-    out, err = capsys.readouterr()
-    assert out == real
-    conservation.conservation(helper_test_getalign())
-    out, err = capsys.readouterr()
-    assert out == real
-
-    # incorrect reference
-    assert conservation.conservation(helper_test_getalign(), 'incorrect') is False
-    out, err = capsys.readouterr()
-    expected = 'E: The reference sequence (incorrect) not found among the sequences\n'
-    assert err == expected
-
-    import tempfile
-
-    indata = ('>gi|0000000|ref|NP_000000.1| Made-up data ' +
-              '[Rattus norvegicus]\n' +
-              'ACD--GHIKL\n'
-              '>gi|0000001|ref|NP_000001.1| Made-up data ' +
-              '[Arabidopsis thaliana]\n' +
-              'ACDEAGHIKL\n' +
-              '>gi|0000002|ref|NP_000002.1| Made-up data ' +
-              '[Homo Sapiens]\n' +
-              'ACD--GHIKL\n' +
-              '>gi|0000003|ref|NP_000003.1| Made-up data ' +
-              '[Arabidopsis thaliana]\n' +
-              'ADD--GHILL\n')
-
-    filename = tempfile.mkstemp()[1]
-    with open(filename, 'w') as tmpf:
-        tmpf.write(indata)
-    expected = ('# NP_000001.1\n' +
-                '1\tA\tA\t1.0\n' +
-                '2\tC\tC\t0.75\n' +
-                '3\tD\tD\t1.0\n' +
-                '4\tE\t-\t0.75\n' +
-                '5\tA\t-\t0.75\n' +
-                '6\tG\tG\t1.0\n' +
-                '7\tH\tH\t1.0\n' +
-                '8\tI\tI\t1.0\n' +
-                '9\tK\tK\t0.75\n' +
-                '10\tL\tL\t1.0\n')
-    conservation.conservation(filename, 'NP_000001.1')
-    out, err = capsys.readouterr()
-    assert out == expected
 
 
 def test_make_freq_table():

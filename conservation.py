@@ -7,6 +7,54 @@ import sys
 
 from Bio import AlignIO
 from Bio.Align import AlignInfo
+from Bio.Seq import Seq
+from Bio.Alphabet import IUPAC, Gapped
+
+
+def conservation(filename, refseq=None, group_res=False):
+    '''
+    Read an alignment in FASTA format
+    Calculate the conservation per position
+    Input: filename - filename of alignment in FASA format
+    refseq - only keep positions where sequence refseq has a residue
+    group_res - group the residues by residue type
+    '''
+    alignment = AlignIO.read(filename, 'fasta')
+
+    headers = [s.name for s in alignment]
+    if refseq:
+        try:
+            refind = headers.index([h for h in headers if refseq in h][0])
+        except IndexError:
+            error = ('E: The reference sequence ({}) ' +
+                     'not found among the sequences\n').format(refseq)
+            sys.stderr.write(error)
+            return False
+
+    if group_res:
+        sequences = [str(ali.seq) for ali in alignment]
+        print(sequences)
+        sequences = group_res_prop(sequences)
+        print(sequences)
+        for i in range(len(alignment)):
+            alignment[i].seq = Seq(sequences[i], Gapped(IUPACProtein()))
+        
+    freq_table = make_freq_table(alignment)
+    cons = get_most_conserved(freq_table, len(alignment))
+
+    if refseq is None:
+        refseq_p = ' '*len(alignment[0].seq)
+    else:
+        refseq_p = str(alignment[refind].seq)
+        print('# {}'.format(refseq))
+    pos = 1
+    for i in range(len(freq_table.pssm)):
+        if refseq_p[i] != '-':
+            print('{ps}\t{rs}\t{mc}\t{rate:.3}'.format(ps=pos,
+                                                       rs=refseq_p[i],
+                                                       mc=cons[i][1],
+                                                       rate=cons[i][0]))
+            pos += 1
 
 
 def get_most_conserved(freq_table, align_len):
@@ -57,44 +105,6 @@ def group_res_prop(sequences):
         sequences[i] = sequences[i].replace('Q', 'N')
         sequences[i] = sequences[i].replace('T', 'S')
     return sequences
-
-
-def conservation(filename, refseq=None, group_res=False):
-    '''
-    Read an alignment in FASTA format
-    Calculate the conservation per position
-    Input: filename - filename of alignment in FASA format
-    refseq - only keep positions where sequence refseq has a residue
-    group_res - group the residues by residue type
-    '''
-    alignment = AlignIO.read(filename, 'fasta')
-
-    headers = [s.name for s in alignment]
-    if refseq is not None:
-        try:
-            refind = headers.index([h for h in headers if refseq in h][0])
-        except IndexError:
-            error = ('E: The reference sequence ({}) ' +
-                     'not found among the sequences\n').format(refseq)
-            sys.stderr.write(error)
-            return False
-
-    freq_table = make_freq_table(alignment)
-    cons = get_most_conserved(freq_table, len(alignment))
-
-    if refseq is None:
-        refseq_p = ' '*len(alignment[0].seq)
-    else:
-        refseq_p = str(alignment[refind].seq)
-        print('# {}'.format(refseq))
-    pos = 1
-    for i in range(len(freq_table.pssm)):
-        if refseq_p[i] != '-':
-            print('{ps}\t{rs}\t{mc}\t{rate:.3}'.format(ps=pos,
-                                                       rs=refseq_p[i],
-                                                       mc=cons[i][1],
-                                                       rate=cons[i][0]))
-            pos += 1
 
 
 def make_freq_table(alignment):
