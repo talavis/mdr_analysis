@@ -33,11 +33,9 @@ def conservation(filename, refseq=None, group_res=False):
 
     if group_res:
         sequences = [str(ali.seq) for ali in alignment]
-        print(sequences)
         sequences = group_res_prop(sequences)
-        print(sequences)
         for i in range(len(alignment)):
-            alignment[i].seq = Seq(sequences[i], Gapped(IUPACProtein()))
+            alignment[i].seq = Seq(sequences[i], Gapped(IUPAC.protein, '-'))
         
     freq_table = make_freq_table(alignment)
     cons = get_most_conserved(freq_table, len(alignment))
