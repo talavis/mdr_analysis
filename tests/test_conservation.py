@@ -6,6 +6,8 @@ Testing conservation.py
 from Bio import AlignIO
 
 import conservation
+import pytest
+
 
 def helper_test_getalign():
     '''
@@ -219,3 +221,51 @@ def test_make_freq_table():
     alignment = AlignIO.read(helper_test_getalign(), 'fasta')
 
     assert conservation.make_freq_table(alignment).pssm == real
+
+
+def test_parse_parameters():
+    '''
+    Test parse_parameters()
+    '''
+    # correct parameters
+    try:
+        params = ('filename.ali')
+        expected = ('filename.ali', None, None)
+        conservation.parse_parameters(params) == expected
+    except:
+        print('error')
+    params = ('filename.ali', 'reference=P123456')
+    expected = ('filename.ali', 'P123456', None)
+    conservation.parse_parameters(params) == expected
+    params = ('filename.ali', 'reference=P123456', 'group_res=y')
+    expected = ('filename.ali', 'P123456', True)
+    conservation.parse_parameters(params) == expected
+    params = ('filename.ali', 'group_res=y')
+    expected = ('filename.ali', None, True)
+    conservation.parse_parameters(params) == expected
+    # different order
+    params = ('filename.ali', 'group_res=y', 'reference=P123456')
+    expected = ('filename.ali', 'P123456', True)
+    conservation.parse_parameters(params) == expected
+    # incorrect parameters
+    with pytest.raises(ValueError) as excinfo:
+        expected = 'E: incorrect parameter (group_res=a)'
+        params = ('filename.ali', 'group_res=a')
+        conservation.parse_parameters(params)
+    assert str(excinfo.value) == expected
+    with pytest.raises(ValueError) as excinfo:
+        expected = 'E: incorrect parameter (abc)'
+        params = ('filename.ali', 'abc')
+        conservation.parse_parameters(params)
+    assert str(excinfo.value) == expected
+    
+
+def test_print_use(capsys):
+    '''
+    Test print_use()
+    '''
+    expected = ('Usage: conservation.py <alignment file> ' +
+                '[reference=seq] [group_res=y/N]\n')
+    conservation.print_use('conservation.py')
+    err = capsys.readouterr()[1]
+    assert err == expected
