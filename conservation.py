@@ -118,13 +118,42 @@ def make_freq_table(alignment):
     return freq_table
 
 
+def parse_parameters(params):
+    '''
+    Parse the commandline parameters
+    '''
+    filename = params[0]
+    group_res = None
+    reference = None
+    for param in params[1:]:
+        if 'group_res=' in param:
+            choice = param[param.index('=')+1:]
+            if choice.lower() == 'y':
+                group_res = True
+            elif choice.lower() != 'n':
+                raise ValueError('E: incorrect parameter ({})'.format(param))
+        elif 'reference=' in param:
+            reference = param[param.index('=')+1:]
+        else:
+            raise ValueError('E: incorrect parameter ({})'.format(param))
+    return (filename, reference, group_res)
+
+
+def print_use(base):
+    '''
+    Print the command line usage
+    '''
+    sys.stderr.write(('Usage: {0} '.format(base) +
+                      '<alignment file> [reference=seq] [group_res=y/N]\n'))
+
+
 if __name__ == '__main__':
-    if len(sys.argv) not in (2, 3):
-        sys.stderr.write(('Usage: {0} '.format(sys.argv[0]) +
-                          '<alignment file> [reference seq]\n'))
+    if len(sys.argv) < 2:
+        print_use(sys.argv[0])
+        sys.exit(1)
+    try:
+        conservation(*parse_parameters(sys.argv[1:]))
+    except ValueError as err:
+        print(err)
         sys.exit(1)
 
-    if len(sys.argv) == 3:
-        conservation(sys.argv[1], sys.argv[2])
-    else:
-        conservation(sys.argv[1])
