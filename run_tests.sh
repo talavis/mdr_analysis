@@ -2,7 +2,8 @@
 
 TESTDIR=tests
 
-PYTHONPATH=.:find_sequences py.test -vvv ${TESTDIR}/test_bioinfo.py --cov=bioinfo\
+PYTHONPATH=.:find_sequences py.test -vvv ${TESTDIR}/test_analyse_ali_groups.py --cov=analyse_ali_groups\
+					 ${TESTDIR}/test_bioinfo.py --cov=bioinfo\
 					 ${TESTDIR}/test_blast_by_name.py --cov=blast_by_name\
 					 ${TESTDIR}/test_conservation.py --cov=conservation\
 					 ${TESTDIR}/test_gen_icm_visual.py --cov=gen_icm_visual\
@@ -17,3 +18,4 @@ PYTHONPATH=.:find_sequences py.test -vvv ${TESTDIR}/test_bioinfo.py --cov=bioinf
 					 ${TESTDIR}/test_species.py --cov=species\
 					 ${TESTDIR}/test_taxnode.py --cov=taxnode\
 					 ${TESTDIR}/find_sequences/test_select_accs_blastp.py --cov=select_accs_blastp
+
