@@ -75,7 +75,7 @@ def test_main(capsys):
 
 if __name__ == '__main__':
     if len(sys.argv) not in (3, 4):
-        sys.stderr.write('Usage: {} <tree file> <pattern> [revert]\n'.format(sys.argv[1]))
+        sys.stderr.write('Usage: {} <tree file> <pattern> [revert]\n'.format(sys.argv[0]))
         sys.exit(1)
 
     if len(sys.argv) == 4 and sys.argv[3] == 'revert':
