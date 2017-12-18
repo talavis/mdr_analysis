@@ -39,7 +39,7 @@ def conservation(filename, refseq=None, group_res=False, ign_gaps=False):
             alignment[i].seq = Seq(sequences[i], Gapped(IUPAC.protein, '-'))
         
     freq_table = make_freq_table(alignment)
-    cons = get_most_conserved(freq_table, len(alignment))
+    cons = get_most_conserved(freq_table)
 
     if refseq is None:
         refseq_p = ' '*len(alignment[0].seq)
@@ -56,7 +56,7 @@ def conservation(filename, refseq=None, group_res=False, ign_gaps=False):
             pos += 1
 
 
-def get_most_conserved(freq_table, align_len, ign_gaps=False):
+def get_most_conserved(freq_table, ign_gaps=False):
     '''
     Determine the most conserved residue and its conservation
     rate in each position.
@@ -73,6 +73,7 @@ def get_most_conserved(freq_table, align_len, ign_gaps=False):
         # frequency table from Biopython
         num_positions = len(freq_table.pssm)
     result = [0] * num_positions
+    align_size = sum(freq_table[0].values())
     for pos in range(num_positions):
         if ign_gaps:
             freq_table[pos]['-'] = 0
@@ -80,10 +81,10 @@ def get_most_conserved(freq_table, align_len, ign_gaps=False):
         if values.count(max(values)) == 1:
             freq_table_inv = dict((j, i) for i, j in freq_table[pos].items())
             best_conserved = freq_table_inv[max(freq_table_inv)]
-            score = freq_table[pos][best_conserved]/align_len
+            score = freq_table[pos][best_conserved]/align_size
         else:
             best_conserved = 'X'
-            score = max(values)/align_len
+            score = max(values)/align_size
         result[pos] = (score, best_conserved)
 
     return result

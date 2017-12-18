@@ -150,7 +150,7 @@ def test_get_most_conserved():
     real = [(1.0, 'A'), (0.75, 'C'), (1.0, 'D'), (1.0, 'E'), (0.5, 'F'),
             (1.0, 'G'), (1.0, 'H'), (1.0, 'I'), (0.75, 'K'), (1.0, 'L')]
 
-    assert conservation.get_most_conserved(freq_table, 4) == real
+    assert conservation.get_most_conserved(freq_table, ign_gaps=True) == real
 
     freq_table = [{'-': 0, 'A': 4.0, 'C': 0, 'D': 0, 'E': 0,
                    'F': 0, 'G': 0, 'H': 0, 'I': 0, 'K': 0, 'L': 0},
@@ -176,7 +176,12 @@ def test_get_most_conserved():
     real = [(1.0, 'A'), (0.75, 'C'), (1.0, '-'), (0.75, 'E'), (0.25, 'X'),
             (1.0, 'G'), (1.0, 'H'), (1.0, 'I'), (0.75, 'K'), (1.0, 'L')]
 
-    assert conservation.get_most_conserved(freq_table, 4) == real
+    assert conservation.get_most_conserved(freq_table) == real
+    # with ign_gaps=True
+    real = [(1.0, 'A'), (0.75, 'C'), (0.0, 'X'), (0.75, 'E'), (0.25, 'X'),
+            (1.0, 'G'), (1.0, 'H'), (1.0, 'I'), (0.75, 'K'), (1.0, 'L')]
+
+    assert conservation.get_most_conserved(freq_table, ign_gaps=True) == real
 
 
 def test_group_res_prop():
