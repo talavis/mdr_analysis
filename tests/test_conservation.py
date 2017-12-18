@@ -250,27 +250,35 @@ def test_parse_parameters():
     # correct parameters
     try:
         params = ('filename.ali')
-        expected = ('filename.ali', None, None)
+        expected = ('filename.ali', None, False, False)
         assert conservation.parse_parameters(params) == expected
     except ValueError:
         print('error')
     params = ('filename.ali', 'reference=P123456')
-    expected = ('filename.ali', 'P123456', None)
+    expected = ('filename.ali', 'P123456', False, False)
     assert conservation.parse_parameters(params) == expected
     params = ('filename.ali', 'reference=P123456', 'group_res=y')
-    expected = ('filename.ali', 'P123456', True)
+    expected = ('filename.ali', 'P123456', True, False)
     assert conservation.parse_parameters(params) == expected
     params = ('filename.ali', 'group_res=y')
-    expected = ('filename.ali', None, True)
+    expected = ('filename.ali', None, True, False)
+    assert conservation.parse_parameters(params) == expected
+    params = ('filename.ali', 'group_res=y', 'ign_gaps=Y')
+    expected = ('filename.ali', None, True, True)
     assert conservation.parse_parameters(params) == expected
     # different order
-    params = ('filename.ali', 'group_res=y', 'reference=P123456')
-    expected = ('filename.ali', 'P123456', True)
+    params = ('filename.ali', 'group_res=y', 'ign_gaps=y', 'reference=P123456')
+    expected = ('filename.ali', 'P123456', True, True)
     assert conservation.parse_parameters(params) == expected
     # incorrect parameters
     with pytest.raises(ValueError) as excinfo:
         expected = 'E: incorrect parameter (group_res=a)'
         params = ('filename.ali', 'group_res=a')
+        conservation.parse_parameters(params)
+    assert str(excinfo.value) == expected
+    with pytest.raises(ValueError) as excinfo:
+        expected = 'E: incorrect parameter (ign_gaps=s)'
+        params = ('filename.ali', 'ign_gaps=s')
         conservation.parse_parameters(params)
     assert str(excinfo.value) == expected
     with pytest.raises(ValueError) as excinfo:
@@ -285,7 +293,7 @@ def test_print_use(capsys):
     Test print_use()
     '''
     expected = ('Usage: conservation.py <alignment file> ' +
-                '[reference=seq] [group_res=y/N]\n')
+                '[reference=seq] [group_res=y/N] [ign_gaps=y/N]\n')
     conservation.print_use('conservation.py')
     err = capsys.readouterr()[1]
     assert err == expected

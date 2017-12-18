@@ -134,8 +134,9 @@ def parse_parameters(params):
     Parse the commandline parameters
     '''
     filename = params[0]
-    group_res = None
+    group_res = False
     reference = None
+    ign_gaps = False
     for param in params[1:]:
         if 'group_res=' in param:
             choice = param[param.index('=')+1:]
@@ -145,9 +146,15 @@ def parse_parameters(params):
                 raise ValueError('E: incorrect parameter ({})'.format(param))
         elif 'reference=' in param:
             reference = param[param.index('=')+1:]
+        elif 'ign_gaps=' in param:
+            choice = param[param.index('=')+1:]
+            if choice.lower() == 'y':
+                ign_gaps = True
+            elif choice.lower() != 'n':
+                raise ValueError('E: incorrect parameter ({})'.format(param))
         else:
             raise ValueError('E: incorrect parameter ({})'.format(param))
-    return (filename, reference, group_res)
+    return (filename, reference, group_res, ign_gaps)
 
 
 def print_use(base):
@@ -155,7 +162,10 @@ def print_use(base):
     Print the command line usage
     '''
     sys.stderr.write(('Usage: {0} '.format(base) +
-                      '<alignment file> [reference=seq] [group_res=y/N]\n'))
+                      '<alignment file> ' +
+                      '[reference=seq] ' +
+                      '[group_res=y/N] ' +
+                      '[ign_gaps=y/N]\n'))
 
 
 if __name__ == '__main__':
