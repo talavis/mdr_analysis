@@ -11,13 +11,14 @@ from Bio.Seq import Seq
 from Bio.Alphabet import IUPAC, Gapped
 
 
-def conservation(filename, refseq=None, group_res=False):
+def conservation(filename, refseq=None, group_res=False, ign_gaps=False):
     '''
     Read an alignment in FASTA format
     Calculate the conservation per position
     Input: filename - filename of alignment in FASA format
     refseq - only keep positions where sequence refseq has a residue
     group_res - group the residues by residue type
+    ign_gaps - ignore gaps when calculating conservation
     '''
     alignment = AlignIO.read(filename, 'fasta')
 
@@ -55,21 +56,26 @@ def conservation(filename, refseq=None, group_res=False):
             pos += 1
 
 
-def get_most_conserved(freq_table, align_len):
+def get_most_conserved(freq_table, align_len, ign_gaps=False):
     '''
     Determine the most conserved residue and its conservation
     rate in each position.
+    ign_gaps - ignore gaps in the calculation of the conservation
     Input: a PSSM frequency table or a list of dicts
     (PSSM.pssm, but without [0] in each tuple)
     Return: a list containing (score, residue)
     '''
     # depending on input type
     try:
+        # dictionary with counts
         num_positions = len(freq_table)
     except TypeError:
+        # frequency table from Biopython
         num_positions = len(freq_table.pssm)
     result = [0] * num_positions
     for pos in range(num_positions):
+        if ign_gaps:
+            freq_table[pos]['-'] = 0
         values = list(freq_table[pos].values())
         if values.count(max(values)) == 1:
             freq_table_inv = dict((j, i) for i, j in freq_table[pos].items())
