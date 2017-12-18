@@ -117,8 +117,23 @@ def test_conservation(capsys):
             '8\t \tI\t1.0\n' +
             '9\t \tK\t0.75\n' +
             '10\t \tI\t1.0\n')
-    conservation.conservation(helper_test_getalign(), group_res = True)
-    out, err = capsys.readouterr()
+    conservation.conservation(helper_test_getalign(), group_res=True)
+    out = capsys.readouterr()[0]
+    assert out == real
+
+    # with ignore gaps
+    real = ('1\t \tA\t1.0\n' +
+            '2\t \tC\t0.75\n' +
+            '3\t \tD\t1.0\n' +
+            '4\t \tE\t1.0\n' +
+            '5\t \tX\t0.333\n' +
+            '6\t \tG\t1.0\n' +
+            '7\t \tH\t1.0\n' +
+            '8\t \tI\t1.0\n' +
+            '9\t \tK\t0.75\n' +
+            '10\t \tL\t1.0\n')
+    conservation.conservation(helper_test_getalign(), ign_gaps=True)
+    out = capsys.readouterr()[0]
     assert out == real
 
 
@@ -178,7 +193,7 @@ def test_get_most_conserved():
 
     assert conservation.get_most_conserved(freq_table) == real
     # with ign_gaps=True
-    real = [(1.0, 'A'), (0.75, 'C'), (0.0, 'X'), (0.75, 'E'), (0.25, 'X'),
+    real = [(1.0, 'A'), (0.75, 'C'), (0.0, 'X'), (1.0, 'E'), (1/3, 'X'),
             (1.0, 'G'), (1.0, 'H'), (1.0, 'I'), (0.75, 'K'), (1.0, 'L')]
 
     assert conservation.get_most_conserved(freq_table, ign_gaps=True) == real
@@ -236,22 +251,22 @@ def test_parse_parameters():
     try:
         params = ('filename.ali')
         expected = ('filename.ali', None, None)
-        conservation.parse_parameters(params) == expected
-    except:
+        assert conservation.parse_parameters(params) == expected
+    except ValueError:
         print('error')
     params = ('filename.ali', 'reference=P123456')
     expected = ('filename.ali', 'P123456', None)
-    conservation.parse_parameters(params) == expected
+    assert conservation.parse_parameters(params) == expected
     params = ('filename.ali', 'reference=P123456', 'group_res=y')
     expected = ('filename.ali', 'P123456', True)
-    conservation.parse_parameters(params) == expected
+    assert conservation.parse_parameters(params) == expected
     params = ('filename.ali', 'group_res=y')
     expected = ('filename.ali', None, True)
-    conservation.parse_parameters(params) == expected
+    assert conservation.parse_parameters(params) == expected
     # different order
     params = ('filename.ali', 'group_res=y', 'reference=P123456')
     expected = ('filename.ali', 'P123456', True)
-    conservation.parse_parameters(params) == expected
+    assert conservation.parse_parameters(params) == expected
     # incorrect parameters
     with pytest.raises(ValueError) as excinfo:
         expected = 'E: incorrect parameter (group_res=a)'
@@ -263,7 +278,7 @@ def test_parse_parameters():
         params = ('filename.ali', 'abc')
         conservation.parse_parameters(params)
     assert str(excinfo.value) == expected
-    
+
 
 def test_print_use(capsys):
     '''

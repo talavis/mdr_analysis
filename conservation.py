@@ -37,9 +37,9 @@ def conservation(filename, refseq=None, group_res=False, ign_gaps=False):
         sequences = group_res_prop(sequences)
         for i in range(len(alignment)):
             alignment[i].seq = Seq(sequences[i], Gapped(IUPAC.protein, '-'))
-        
+
     freq_table = make_freq_table(alignment)
-    cons = get_most_conserved(freq_table)
+    cons = get_most_conserved(freq_table, ign_gaps)
 
     if refseq is None:
         refseq_p = ' '*len(alignment[0].seq)
@@ -73,10 +73,10 @@ def get_most_conserved(freq_table, ign_gaps=False):
         # frequency table from Biopython
         num_positions = len(freq_table.pssm)
     result = [0] * num_positions
-    align_size = sum(freq_table[0].values())
     for pos in range(num_positions):
         if ign_gaps:
             freq_table[pos]['-'] = 0
+        align_size = sum(freq_table[pos].values())
         values = list(freq_table[pos].values())
         if values.count(max(values)) == 1:
             freq_table_inv = dict((j, i) for i, j in freq_table[pos].items())
@@ -84,7 +84,11 @@ def get_most_conserved(freq_table, ign_gaps=False):
             score = freq_table[pos][best_conserved]/align_size
         else:
             best_conserved = 'X'
-            score = max(values)/align_size
+            try:
+                score = max(values)/align_size
+            except ZeroDivisionError:
+                # only gaps in positions; shouldn't occur in normal alignments
+                score = 0.0
         result[pos] = (score, best_conserved)
 
     return result
@@ -163,4 +167,3 @@ if __name__ == '__main__':
     except ValueError as err:
         print(err)
         sys.exit(1)
-
