@@ -56,7 +56,7 @@ def compare_res(sequence1, sequence2, skip=True):
     return matches
 
 
-def main(filename, options=[]):
+def main(filename, options=()):
     '''
     Read a FASTA alignment
     Calculate the pairwise sequence identities
