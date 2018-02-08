@@ -11,9 +11,14 @@ import bioinfo
 
 def calc_seqids(seqs, skip=True):
     '''
-    Calculate the pairwise sequence identities
-    Parameter: list of aligned sequences
-    Return: list of seq_ids for all comparisons
+    Calculate the pairwise sequence identities of a group of sequences
+
+    Args:
+        seqs (list, tuple): aligned sequences as strings
+        skip (bool) = skip comparison of positions with gaps
+
+    Returns:
+        list: sequence identities for all comparisons
     '''
     seq_ids = list()
     for i in range(len(seqs)-1):
@@ -27,6 +32,14 @@ def calc_seqids(seqs, skip=True):
 def compare_res(sequence1, sequence2, skip=True):
     '''
     Compare the residues in two sequences
+
+    Args:
+        sequence1 (str): the first sequence to compare
+        sequence2 (str): the second sequence to compare
+        skip (bool) = skip comparison of positions with gaps
+
+    Returns:
+        list: position match information
     '''
     # len should be same
     matches = list()
@@ -48,6 +61,10 @@ def main(filename, options=[]):
     Read a FASTA alignment
     Calculate the pairwise sequence identities
     Optionally print basic statistics
+
+    Args:
+        filename (str): filename of the FASTA alignment file
+        options (list): extra options, see set_config
     '''
     config = set_config(options)
     if config is False:
@@ -61,7 +78,10 @@ def main(filename, options=[]):
 
 def print_stats(seq_ids):
     '''
-    Print the basic stats
+    Print the basic stats of a group of comparisons
+
+    Args:
+        seq_ids (list, tuple): sequence identities
     '''
     print('Median: {:.4}'.format(numpy.median(seq_ids)))
     print('Average: {:.4}'.format(numpy.average(seq_ids)))
@@ -71,9 +91,14 @@ def print_stats(seq_ids):
 
 def set_config(options):
     '''
-    Change cli options to standardised tuple
-    Returns a list with the config if fine
-    Returns an error string otherwise
+    Change cli options to a standardised tuple of 
+    (skip gaps T/F, print stats T/F)
+
+    Args:
+        options (list, tuple): configuration options
+
+    Returns:
+        list: configuration in standardised format
     '''
     accepted = {'gs': (0, True), 'gm': (0, False),
                 'sn': (1, False), 'sy': (1, True)}
