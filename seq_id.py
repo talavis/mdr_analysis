@@ -9,6 +9,20 @@ import numpy
 import bioinfo
 
 
+class DifferentLengthsError(Exception):
+    '''
+    Used when two sequences have different lengths
+    '''
+    pass
+
+
+class IncorrectOptionError(Exception):
+    '''
+    Used when an incorrect option is provided
+    '''
+    pass
+
+
 def calc_seqids(seqs, skip=True):
     '''
     Calculate the pairwise sequence identities of a group of sequences
@@ -41,6 +55,8 @@ def compare_res(sequence1, sequence2, skip=True):
     Returns:
         list: position match information
     '''
+    if len(sequence1) != len(sequence2):
+        raise DifferentLengthsError('The sequences have different lengths')
     # len should be same
     matches = list()
     for i in range(len(sequence1)):
@@ -70,7 +86,7 @@ def main(filename, options=()):
     if config is False:
         return False
 
-    heads, seqs = bioinfo.read_fasta(filename)
+    _, seqs = bioinfo.read_fasta(filename)
     seq_ids = calc_seqids(seqs, config[0])
     if config[1]:
         print_stats(seq_ids)
@@ -91,7 +107,7 @@ def print_stats(seq_ids):
 
 def set_config(options):
     '''
-    Change cli options to a standardised tuple of 
+    Change cli options to a standardised tuple of
     (skip gaps T/F, print stats T/F)
 
     Args:
