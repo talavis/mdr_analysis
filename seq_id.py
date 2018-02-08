@@ -83,8 +83,6 @@ def main(filename, options=()):
         options (list): extra options, see set_config
     '''
     config = set_config(options)
-    if config is False:
-        return False
 
     _, seqs = bioinfo.read_fasta(filename)
     seq_ids = calc_seqids(seqs, config[0])
@@ -120,12 +118,11 @@ def set_config(options):
                 'sn': (1, False), 'sy': (1, True)}
     config = [True] * (len(accepted)//2)
     for opt in options:
-        try:
+        if opt in accepted:
             tmp = accepted[opt]
             config[tmp[0]] = tmp[1]
-        except KeyError:
-            sys.stderr.write('E: unknown option: {}\n'.format(opt))
-            return False
+        else:
+            raise IncorrectOptionError(f'Unknown option: {opt}')
     return config
 
 
@@ -136,5 +133,4 @@ if __name__ == '__main__':
         sys.stderr.write(USAGE_INFO)
         sys.exit()
 
-    if main(sys.argv[1], sys.argv[2:]) is False:
-        sys.exit(1)
+    main(sys.argv[1], sys.argv[2:])
