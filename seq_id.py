@@ -57,14 +57,14 @@ def compare_res(sequence1, sequence2, skip=True):
     '''
     if len(sequence1) != len(sequence2):
         raise DifferentLengthsError('The sequences have different lengths')
+
     matches = list()
-    
-    for i in range(len(sequence1)):
+    for pos in zip(sequence1, sequence2):
         if skip:
-            if sequence1[i] == '-' or sequence2[i] == '-':
+            if pos[0] == '-' or pos[1] == '-':
                 continue
-        if sequence1[i] == sequence2[i]:
-            if sequence1[i] == '-' and sequence2[i] == '-':
+        if pos[0] == pos[1]:
+            if pos[0] == '-' and pos[1] == '-':
                 continue
             matches.append(1)
         else:
