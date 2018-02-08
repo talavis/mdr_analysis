@@ -57,8 +57,8 @@ def compare_res(sequence1, sequence2, skip=True):
     '''
     if len(sequence1) != len(sequence2):
         raise DifferentLengthsError('The sequences have different lengths')
-    # len should be same
     matches = list()
+    
     for i in range(len(sequence1)):
         if skip:
             if sequence1[i] == '-' or sequence2[i] == '-':
