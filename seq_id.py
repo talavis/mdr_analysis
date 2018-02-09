@@ -4,6 +4,8 @@ Calculate the sequence identity between the sequences in an alignment
 '''
 
 import sys
+from collections import namedtuple
+
 import numpy
 
 import bioinfo
@@ -80,13 +82,13 @@ def main(filename, options=()):
 
     Args:
         filename (str): filename of the FASTA alignment file
-        options (list): extra options, see set_config
+        options (list): options, see set_config
     '''
     config = set_config(options)
 
     _, seqs = bioinfo.read_fasta(filename)
-    seq_ids = calc_seqids(seqs, config[0])
-    if config[1]:
+    seq_ids = calc_seqids(seqs, config.skip_gaps)
+    if config.print_stats:
         print_stats(seq_ids)
 
 
@@ -105,24 +107,25 @@ def print_stats(seq_ids):
 
 def set_config(options):
     '''
-    Change cli options to a standardised tuple of
-    (skip gaps T/F, print stats T/F)
+    Generate a configuration based on the given options
 
     Args:
         options (list, tuple): configuration options
 
     Returns:
-        list: configuration in standardised format
+        namedtuple: configuration
     '''
-    accepted = {'gs': (0, True), 'gm': (0, False),
+    Config = namedtuple('Config', ['skip_gaps', 'print_stats'])
+    accepted = {'gm': (0, False), 'gs': (0, True),
                 'sn': (1, False), 'sy': (1, True)}
-    config = [True] * (len(accepted)//2)
+    tmp_conf = [True]*(len(accepted)//2)
     for opt in options:
         if opt in accepted:
             tmp = accepted[opt]
-            config[tmp[0]] = tmp[1]
+            tmp_conf[tmp[0]] = tmp[1]
         else:
             raise IncorrectOptionError(f'Unknown option: {opt}')
+    config = Config(skip_gaps=tmp_conf[0], print_stats=tmp_conf[1])
     return config
 
 

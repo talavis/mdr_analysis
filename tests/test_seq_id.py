@@ -118,13 +118,15 @@ def test_set_config():
     '''
     Test set_config()
     '''
+    from collections import namedtuple
+    Conf = namedtuple('Config', ['skip_gaps', 'print_stats'])
     # one option
-    assert seq_id.set_config(['gm']) == [False, True]
+    assert seq_id.set_config(['gm']) == Conf(skip_gaps=False, print_stats=True)
     # incorrect option
     with pytest.raises(seq_id.IncorrectOptionError) as exc:
         seq_id.set_config(['as'])
         assert str(exc.value) == 'Unknown option: as'
     # multiple options, "incorrect" order
-    assert seq_id.set_config(['sn', 'gs']) == [True, False]
+    assert seq_id.set_config(['sn', 'gs']) == Conf(skip_gaps=True, print_stats=False)
     # should use the last given parameter if multiple copies are given
-    assert seq_id.set_config(['gs', 'gs', 'gm']) == [False, True]
+    assert seq_id.set_config(['gs', 'gs', 'gm']) == Conf(skip_gaps=False, print_stats=True)
